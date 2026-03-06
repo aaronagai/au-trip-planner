@@ -146,7 +146,69 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 </style>
 """, unsafe_allow_html=True)
 
-# ── Dashboard (always renders as background) ──────────────────
+# ── Welcome page ──────────────────────────────────────────────
+if st.session_state.page == "welcome":
+    st.markdown("""
+    <style>
+    .stApp { background: radial-gradient(ellipse at 60% 40%, #1a1040 0%, #090909 60%); }
+    .peek-row { display:flex; align-items:center; justify-content:center; gap:16px; margin:40px 0; }
+    .peek-side {
+        background:#111; border:1px solid #1a1a1a; border-radius:14px;
+        padding:32px 20px; text-align:center; width:130px;
+        transform: scale(0.8) translateY(12px); opacity:0.25;
+    }
+    .peek-emoji { font-size:36px; margin-bottom:8px; }
+    .peek-name { font-size:13px; font-weight:600; color:#444; }
+    </style>
+    <div style="text-align:center;padding-top:80px;">
+        <div style="font-size:44px;margin-bottom:14px;">✈️ 🦘</div>
+        <div style="font-size:30px;font-weight:800;color:#fff;margin-bottom:8px;">oi oi mate 👋</div>
+        <div style="font-size:14px;color:#444;margin-bottom:0;">before we start... which bubs are you??</div>
+    </div>
+    <div class="peek-row">
+        <div class="peek-side"><div class="peek-emoji">🌏</div><div class="peek-name">???</div></div>
+        <div class="peek-side"><div class="peek-emoji">🌏</div><div class="peek-name">???</div></div>
+    </div>
+    """, unsafe_allow_html=True)
+    _, c, _ = st.columns([1, 2, 1])
+    with c:
+        b1, b2 = st.columns(2)
+        if b1.button("🧑‍💻 Aaron", use_container_width=True):
+            st.session_state.bubs = "Aaron"
+            st.session_state.page = "greet"
+            st.rerun()
+        if b2.button("🥰 Andrea", use_container_width=True):
+            st.session_state.bubs = "Andrea"
+            st.session_state.page = "greet"
+            st.rerun()
+    st.stop()
+
+# ── Greet page ────────────────────────────────────────────────
+elif st.session_state.page == "greet":
+    bubs = st.session_state.bubs
+    if bubs == "Aaron":
+        emoji, msg, sub = "🧑‍💻", "Hello, Aaron The Bubs.", "Identity confirmed. Initialising expense matrix and flight telemetry. Standby for full mission briefing."
+    else:
+        emoji, msg, sub = "🥰", "Hello, Andrea The Bubs.", "Identity confirmed. Loading trip parameters and itinerary data. Please proceed to the dashboard."
+    st.markdown(f"""
+    <style>.stApp {{ background: radial-gradient(ellipse at 40% 60%, #1a1040 0%, #090909 60%); }}</style>
+    <div style="text-align:center;padding-top:100px;">
+        <div style="font-size:72px;margin-bottom:20px;">{emoji}</div>
+        <div style="font-size:32px;font-weight:800;color:#fff;margin-bottom:12px;">{msg}</div>
+        <div style="font-size:14px;color:#444;margin-bottom:48px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.7;">{sub}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    _, c, _ = st.columns([1, 2, 1])
+    with c:
+        if st.button("🚀 Let's gooo", use_container_width=True):
+            st.session_state.page = "dashboard"
+            st.rerun()
+        if st.button("← not me lol", use_container_width=True):
+            st.session_state.page = "welcome"
+            st.rerun()
+    st.stop()
+
+# ── Dashboard ──────────────────────────────────────────────────
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Melbourne & Sydney</div>', unsafe_allow_html=True)
@@ -193,11 +255,11 @@ st.markdown('<div class="page-sub">Melbourne & Sydney · November 2025 · Two Pa
 
 # Top KPI row
 kpi_items = [
-    ("Grand Total",     rm(grand_total),    "All expenses"),
-    ("Flights",         rm(flight_total),   "5 segments"),
-    ("Accommodation",   rm(accom_total),    "9 nights"),
-    ("Aaron",           rm(aaron) if aaron else "TBD", "Flights + hotel"),
-    ("Andrea",          rm(andrea) if andrea else "TBD", "Food"),
+    ("Grand Total",    rm(grand_total),  "All expenses"),
+    ("Flights",        rm(flight_total), "5 segments"),
+    ("Accommodation",  rm(accom_total),  "9 nights"),
+    ("Food",           rm(food_total),   "Both cities"),
+    ("Transport",      rm(transport_total), "Both cities"),
 ]
 r1, r2 = st.columns(2), st.columns(3)
 for i, (label, val, sub) in enumerate(kpi_items):
@@ -363,8 +425,8 @@ if auto_refresh:
     time.sleep(3)
     st.rerun()
 
-# ── Overlays (welcome / greet) rendered on top of dashboard ───
-if st.session_state.page == "welcome":
+# ── (old overlay code removed) ───
+if False:
     components.html("""
     <!DOCTYPE html>
     <html>
