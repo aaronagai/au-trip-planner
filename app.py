@@ -116,6 +116,10 @@ st.markdown("""
 
 /* Remove expander border */
 div[data-testid="stExpander"] { border: none !important; box-shadow: none !important; }
+details { border: none !important; box-shadow: none !important; }
+details summary { border: none !important; }
+.streamlit-expanderHeader { border: none !important; box-shadow: none !important; }
+.streamlit-expanderContent { border: none !important; }
 div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1a1a; }
 
 /* Mobile responsive */
