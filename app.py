@@ -294,7 +294,7 @@ with st.expander("Flights"):
         "Lounge":      [lounge_url(n) for n in notes],
     })
     st.dataframe(flights_df, hide_index=True, use_container_width=True, column_config={
-        "Lounge": st.column_config.LinkColumn("Lounge", display_text="Available")
+        "Lounge": st.column_config.LinkColumn("Lounge", display_text="Available", width="small")
     })
 
 with st.expander("Accommodation"):
