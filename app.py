@@ -306,19 +306,18 @@ with ch2:
     aaron_pct = round((aaron_contrib / total_contrib) * 100) if total_contrib else 0
     andrea_pct = 100 - aaron_pct
     fig_contrib = go.Figure(data=[
-        go.Bar(name="Aaron",  x=["Contribution"], y=[aaron_contrib],  marker_color="#7c6aff", text=f"Aaron {aaron_pct}%", textposition="inside", textfont=dict(color="#fff", size=12)),
-        go.Bar(name="Andrea", x=["Contribution"], y=[andrea_contrib], marker_color="#ec4899", text=f"Andrea {andrea_pct}%", textposition="inside", textfont=dict(color="#fff", size=12)),
+        go.Bar(name="Aaron",  y=["Contribution"], x=[aaron_contrib],  orientation="h", marker_color="#7c6aff", text=f"Aaron {aaron_pct}%", textposition="inside", textfont=dict(color="#fff", size=12)),
+        go.Bar(name="Andrea", y=["Contribution"], x=[andrea_contrib], orientation="h", marker_color="#ec4899", text=f"Andrea {andrea_pct}%", textposition="inside", textfont=dict(color="#fff", size=12)),
     ])
     fig_contrib.update_layout(
         paper_bgcolor="#111111", plot_bgcolor="#111111",
-        margin=dict(t=40, b=20, l=20, r=20),
+        margin=dict(t=40, b=20, l=60, r=20),
         barmode="stack",
-        xaxis=dict(showgrid=False, tickfont=dict(color="#888", size=13), linecolor="#1a1a1a"),
-        yaxis=dict(showgrid=True, gridcolor="#1a1a1a", tickfont=dict(color="#555", size=11), linecolor="#1a1a1a"),
-        height=280,
+        xaxis=dict(showgrid=True, gridcolor="#1a1a1a", tickfont=dict(color="#555", size=11), linecolor="#1a1a1a"),
+        yaxis=dict(showgrid=False, tickfont=dict(color="#888", size=12), linecolor="#1a1a1a"),
+        height=180,
         title=dict(text="Aaron <> Andrea Contribution", font=dict(color="#666", size=12), x=0.02),
         legend=dict(font=dict(color="#888", size=12), bgcolor="rgba(0,0,0,0)"),
-        bargap=0.6,
     )
     st.plotly_chart(fig_contrib, use_container_width=True, config={"displayModeBar": False})
     components.html("""
