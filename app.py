@@ -234,8 +234,8 @@ with ch2:
     aaron_pct = round((aaron_contrib / total_contrib) * 100) if total_contrib else 0
     andrea_pct = 100 - aaron_pct
     fig_contrib = go.Figure(data=[
-        go.Bar(name="Aaron",  y=["Contribution"], x=[aaron_contrib],  orientation="h", marker_color="#7c6aff"),
-        go.Bar(name="Andrea", y=["Contribution"], x=[andrea_contrib], orientation="h", marker_color="#ec4899"),
+        go.Bar(name="Aaron",  y=["Contribution"], x=[aaron_contrib],  orientation="h", marker_color="#7c6aff", width=0.3),
+        go.Bar(name="Andrea", y=["Contribution"], x=[andrea_contrib], orientation="h", marker_color="#ec4899", width=0.3),
     ])
     fig_contrib.update_layout(
         paper_bgcolor="#111111", plot_bgcolor="#111111",
