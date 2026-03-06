@@ -103,6 +103,18 @@ st.markdown("""
 .progress-track { background: #1a1a1a; border-radius: 3px; height: 4px; width: 100%; }
 .progress-fill { height: 4px; border-radius: 3px; }
 
+/* Chart entrance animation */
+.stPlotlyChart {
+    animation: fadeInUp 0.7s ease-out;
+}
+.card-sm {
+    animation: fadeInUp 0.5s ease-out;
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
 #MainMenu, footer, header { visibility: hidden; }
 div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1a1a; }
 
@@ -119,16 +131,65 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 # ── Welcome page ──────────────────────────────────────────────
 if st.session_state.page == "welcome":
     st.markdown("""
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
-        <div style="font-size:64px;margin-bottom:16px;">✈️ 🦘</div>
-        <div style="font-size:32px;font-weight:800;color:#fff;margin-bottom:8px;">oi oi mate 👋</div>
-        <div style="font-size:16px;color:#666;margin-bottom:48px;">before we start... which bubs are you??</div>
+    <style>
+    .peek-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin: 60px 0 40px 0;
+    }
+    .peek-card {
+        background: #111;
+        border: 1px solid #222;
+        border-radius: 16px;
+        padding: 40px 32px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        width: 180px;
+    }
+    .peek-card.side {
+        transform: scale(0.85) translateY(12px);
+        opacity: 0.4;
+    }
+    .peek-card.center {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px rgba(124,106,255,0.2);
+        border-color: #7c6aff;
+        z-index: 2;
+    }
+    .peek-card:hover { opacity: 1 !important; transform: scale(1.08) !important; }
+    .peek-emoji { font-size: 48px; margin-bottom: 12px; }
+    .peek-name { font-size: 18px; font-weight: 700; color: #fff; }
+    </style>
+
+    <div style="text-align:center; margin-top: 80px;">
+        <div style="font-size:48px; margin-bottom:16px;">✈️ 🦘</div>
+        <div style="font-size:28px; font-weight:800; color:#fff; margin-bottom:8px;">oi oi mate 👋</div>
+        <div style="font-size:15px; color:#555; margin-bottom:40px;">before we start... which bubs are you??</div>
+    </div>
+
+    <div class="peek-wrap">
+        <div class="peek-card side">
+            <div class="peek-emoji">🌏</div>
+            <div class="peek-name">???</div>
+        </div>
+        <div class="peek-card center">
+            <div class="peek-emoji">🫵</div>
+            <div class="peek-name">You</div>
+        </div>
+        <div class="peek-card side">
+            <div class="peek-emoji">🌏</div>
+            <div class="peek-name">???</div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
+
     _, c, _ = st.columns([1, 2, 1])
     with c:
         b1, b2 = st.columns(2)
-        if b1.button("🤑 Aaron", use_container_width=True):
+        if b1.button("🧑‍💻 Aaron", use_container_width=True):
             st.session_state.bubs = "Aaron"
             st.session_state.page = "greet"
             st.rerun()
@@ -263,15 +324,17 @@ with ch1:
     st.plotly_chart(fig_donut, use_container_width=True, config={"displayModeBar": False})
 
 with ch2:
-    fig_bar = go.Figure(go.Bar(
-        x=categories,
-        y=values,
-        marker=dict(color=colors, line=dict(width=0)),
-        text=[rm(v) for v in values],
-        textposition="outside",
-        textfont=dict(color="#666", size=11),
-        hovertemplate="<b>%{x}</b><br>RM %{y:,.0f}<extra></extra>"
-    ))
+    fig_bar = go.Figure(
+        data=[go.Bar(
+            x=categories, y=[0]*len(values),
+            marker=dict(color=colors, line=dict(width=0)),
+            text=[rm(v) for v in values],
+            textposition="outside",
+            textfont=dict(color="#666", size=11),
+            hovertemplate="<b>%{x}</b><br>RM %{y:,.0f}<extra></extra>"
+        )],
+        frames=[go.Frame(data=[go.Bar(x=categories, y=values)])]
+    )
     fig_bar.update_layout(
         paper_bgcolor="#111111", plot_bgcolor="#111111",
         margin=dict(t=40, b=20, l=20, r=20),
@@ -279,9 +342,25 @@ with ch2:
         yaxis=dict(showgrid=True, gridcolor="#1a1a1a", tickfont=dict(color="#555", size=11), linecolor="#1a1a1a"),
         height=280,
         title=dict(text="Cost by Category", font=dict(color="#666", size=12), x=0.02),
-        bargap=0.4
+        bargap=0.4,
+        updatemenus=[dict(
+            type="buttons", showactive=False, visible=False,
+            buttons=[dict(label="Play", method="animate", args=[None, {
+                "frame": {"duration": 800, "redraw": True},
+                "transition": {"duration": 600, "easing": "cubic-in-out"},
+                "fromcurrent": True
+            }])]
+        )]
     )
     st.plotly_chart(fig_bar, use_container_width=True, config={"displayModeBar": False})
+    st.components.v1.html("""
+    <script>
+    setTimeout(() => {
+        const plots = window.parent.document.querySelectorAll('.js-plotly-plot');
+        plots.forEach(p => { if (p._fullLayout && p._fullLayout.updatemenus) Plotly.animate(p, null); });
+    }, 500);
+    </script>
+    """, height=0)
 
 # Budget progress bars
 st.markdown('<div class="section-header">Budget vs Estimate</div>', unsafe_allow_html=True)
