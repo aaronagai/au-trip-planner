@@ -279,6 +279,7 @@ for label, val, total, color in [
     """, unsafe_allow_html=True)
 
 # Tables
+st.markdown("---")
 with st.expander("Flights"):
     notes = [get(r,8) for r in [4,5,6,7,8]]
     flights_df = pd.DataFrame({
