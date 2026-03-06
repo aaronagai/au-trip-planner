@@ -268,7 +268,7 @@ for label, val, total, color in [
     ("Accommodation", accom_total,     grand_total, "#3b82f6"),
     ("Food",          food_total,      grand_total, "#22c55e"),
     ("Transport",     transport_total, grand_total, "#f59e0b"),
-    ("Activities",    act_total,       grand_total, "#ec4899"),
+    ("Utilities",     act_total,       grand_total, "#ec4899"),
 ]:
     p = round((val / total) * 100) if total else 0
     st.markdown(f"""
