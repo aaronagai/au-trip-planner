@@ -277,7 +277,7 @@ for i, (label, val, sub) in enumerate(kpi_items):
 st.markdown('<div class="section-header">Breakdown</div>', unsafe_allow_html=True)
 ch1, ch2 = st.columns([1, 1])
 
-categories = ["Flights", "Accommodation", "Food", "Transport", "Activities"]
+categories = ["Flights", "Accommodation", "Food", "Transport", "Utilities"]
 values = [flight_total, accom_total, food_total, transport_total, act_total]
 colors = ["#7c6aff", "#3b82f6", "#22c55e", "#f59e0b", "#ec4899"]
 
