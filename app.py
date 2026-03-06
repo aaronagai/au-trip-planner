@@ -165,10 +165,6 @@ if st.session_state.page == "welcome":
         <div style="font-size:30px;font-weight:800;color:#fff;margin-bottom:8px;">oi oi mate 👋</div>
         <div style="font-size:14px;color:#444;margin-bottom:0;">before we start... which bubs are you??</div>
     </div>
-    <div class="peek-row">
-        <div class="peek-side"><div class="peek-emoji">🌏</div><div class="peek-name">???</div></div>
-        <div class="peek-side"><div class="peek-emoji">🌏</div><div class="peek-name">???</div></div>
-    </div>
     """, unsafe_allow_html=True)
     _, c, _ = st.columns([1, 2, 1])
     with c:
