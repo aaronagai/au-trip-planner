@@ -8,6 +8,12 @@ CSV_PATH = "Melbourne_Sydney_Nov.csv"
 
 st.set_page_config(page_title="AU Trip · Nov 2025", layout="wide", page_icon="✈")
 
+# Session state init
+if "page" not in st.session_state:
+    st.session_state.page = "welcome"
+if "bubs" not in st.session_state:
+    st.session_state.bubs = None
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -110,6 +116,58 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 </style>
 """, unsafe_allow_html=True)
 
+# ── Welcome page ──────────────────────────────────────────────
+if st.session_state.page == "welcome":
+    st.markdown("""
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
+        <div style="font-size:64px;margin-bottom:16px;">✈️ 🦘</div>
+        <div style="font-size:32px;font-weight:800;color:#fff;margin-bottom:8px;">oi oi mate 👋</div>
+        <div style="font-size:16px;color:#666;margin-bottom:48px;">before we start... which bubs are you??</div>
+    </div>
+    """, unsafe_allow_html=True)
+    _, c, _ = st.columns([1, 2, 1])
+    with c:
+        b1, b2 = st.columns(2)
+        if b1.button("🤑 Aaron", use_container_width=True):
+            st.session_state.bubs = "Aaron"
+            st.session_state.page = "greet"
+            st.rerun()
+        if b2.button("🥰 Andrea", use_container_width=True):
+            st.session_state.bubs = "Andrea"
+            st.session_state.page = "greet"
+            st.rerun()
+    st.stop()
+
+# ── Greet page ────────────────────────────────────────────────
+elif st.session_state.page == "greet":
+    bubs = st.session_state.bubs
+    if bubs == "Aaron":
+        emoji = "🤑"
+        msg = "Hello, Aaron The Main Bubs."
+        sub = "you are paying the most. as always. click start to face the damage 💸"
+    else:
+        emoji = "🥰"
+        msg = "Hello, Andrea The Bubs."
+        sub = "don't worry bubs, Aaron's got the big bills covered 😇 click start to see the plan!"
+
+    st.markdown(f"""
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
+        <div style="font-size:80px;margin-bottom:16px;">{emoji}</div>
+        <div style="font-size:36px;font-weight:800;color:#fff;margin-bottom:12px;">{msg}</div>
+        <div style="font-size:16px;color:#666;margin-bottom:48px;">{sub}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    _, c, _ = st.columns([1, 2, 1])
+    with c:
+        if st.button("🚀 Let's gooo", use_container_width=True):
+            st.session_state.page = "dashboard"
+            st.rerun()
+        if st.button("← not me lol", use_container_width=True):
+            st.session_state.page = "welcome"
+            st.rerun()
+    st.stop()
+
+# ── Dashboard ─────────────────────────────────────────────────
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Melbourne & Sydney</div>', unsafe_allow_html=True)
