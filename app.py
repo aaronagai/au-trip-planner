@@ -142,13 +142,13 @@ if st.session_state.page == "welcome":
 elif st.session_state.page == "greet":
     bubs = st.session_state.bubs
     if bubs == "Aaron":
-        emoji = "🤑"
-        msg = "Hello, Aaron The Main Bubs."
-        sub = "you are paying the most. as always. click start to face the damage 💸"
+        emoji = "🧑‍💻"
+        msg = "Hello, Aaron The Bubs."
+        sub = "Identity confirmed. Initialising expense matrix and flight telemetry. Standby for full mission briefing."
     else:
         emoji = "🥰"
         msg = "Hello, Andrea The Bubs."
-        sub = "don't worry bubs, Aaron's got the big bills covered 😇 click start to see the plan!"
+        sub = "Identity confirmed. Loading trip parameters and itinerary data. Please proceed to the dashboard."
 
     st.markdown(f"""
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
