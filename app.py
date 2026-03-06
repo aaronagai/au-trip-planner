@@ -8,11 +8,29 @@ CSV_PATH = "Melbourne_Sydney_Nov.csv"
 
 st.set_page_config(page_title="AU Trip · Nov 2025", layout="wide", page_icon="✈")
 
+import streamlit.components.v1 as components
+
 # Session state init
 if "page" not in st.session_state:
     st.session_state.page = "welcome"
 if "bubs" not in st.session_state:
     st.session_state.bubs = None
+
+# Handle URL param state transitions
+params = st.query_params
+if "bubs" in params:
+    st.session_state.bubs = params["bubs"]
+    st.session_state.page = "greet"
+    st.query_params.clear()
+    st.rerun()
+if "start" in params:
+    st.session_state.page = "dashboard"
+    st.query_params.clear()
+    st.rerun()
+if "back" in params:
+    st.session_state.page = "welcome"
+    st.query_params.clear()
+    st.rerun()
 
 st.markdown("""
 <style>
@@ -128,107 +146,7 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 </style>
 """, unsafe_allow_html=True)
 
-# ── Welcome page ──────────────────────────────────────────────
-if st.session_state.page == "welcome":
-    st.markdown("""
-    <style>
-    .peek-wrap {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        margin: 60px 0 40px 0;
-    }
-    .peek-card {
-        background: #111;
-        border: 1px solid #222;
-        border-radius: 16px;
-        padding: 40px 32px;
-        text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        cursor: pointer;
-        width: 180px;
-    }
-    .peek-card.side {
-        transform: scale(0.85) translateY(12px);
-        opacity: 0.4;
-    }
-    .peek-card.center {
-        transform: scale(1.05);
-        box-shadow: 0 0 40px rgba(124,106,255,0.2);
-        border-color: #7c6aff;
-        z-index: 2;
-    }
-    .peek-card:hover { opacity: 1 !important; transform: scale(1.08) !important; }
-    .peek-emoji { font-size: 48px; margin-bottom: 12px; }
-    .peek-name { font-size: 18px; font-weight: 700; color: #fff; }
-    </style>
-
-    <div style="text-align:center; margin-top: 80px;">
-        <div style="font-size:48px; margin-bottom:16px;">✈️ 🦘</div>
-        <div style="font-size:28px; font-weight:800; color:#fff; margin-bottom:8px;">oi oi mate 👋</div>
-        <div style="font-size:15px; color:#555; margin-bottom:40px;">before we start... which bubs are you??</div>
-    </div>
-
-    <div class="peek-wrap">
-        <div class="peek-card side">
-            <div class="peek-emoji">🌏</div>
-            <div class="peek-name">???</div>
-        </div>
-        <div class="peek-card center">
-            <div class="peek-emoji">🫵</div>
-            <div class="peek-name">You</div>
-        </div>
-        <div class="peek-card side">
-            <div class="peek-emoji">🌏</div>
-            <div class="peek-name">???</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    _, c, _ = st.columns([1, 2, 1])
-    with c:
-        b1, b2 = st.columns(2)
-        if b1.button("🧑‍💻 Aaron", use_container_width=True):
-            st.session_state.bubs = "Aaron"
-            st.session_state.page = "greet"
-            st.rerun()
-        if b2.button("🥰 Andrea", use_container_width=True):
-            st.session_state.bubs = "Andrea"
-            st.session_state.page = "greet"
-            st.rerun()
-    st.stop()
-
-# ── Greet page ────────────────────────────────────────────────
-elif st.session_state.page == "greet":
-    bubs = st.session_state.bubs
-    if bubs == "Aaron":
-        emoji = "🧑‍💻"
-        msg = "Hello, Aaron The Bubs."
-        sub = "Identity confirmed. Initialising expense matrix and flight telemetry. Standby for full mission briefing."
-    else:
-        emoji = "🥰"
-        msg = "Hello, Andrea The Bubs."
-        sub = "Identity confirmed. Loading trip parameters and itinerary data. Please proceed to the dashboard."
-
-    st.markdown(f"""
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;text-align:center;">
-        <div style="font-size:80px;margin-bottom:16px;">{emoji}</div>
-        <div style="font-size:36px;font-weight:800;color:#fff;margin-bottom:12px;">{msg}</div>
-        <div style="font-size:16px;color:#666;margin-bottom:48px;">{sub}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    _, c, _ = st.columns([1, 2, 1])
-    with c:
-        if st.button("🚀 Let's gooo", use_container_width=True):
-            st.session_state.page = "dashboard"
-            st.rerun()
-        if st.button("← not me lol", use_container_width=True):
-            st.session_state.page = "welcome"
-            st.rerun()
-    st.stop()
-
-# ── Dashboard ─────────────────────────────────────────────────
+# ── Dashboard (always renders as background) ──────────────────
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Melbourne & Sydney</div>', unsafe_allow_html=True)
@@ -324,24 +242,24 @@ with ch1:
     st.plotly_chart(fig_donut, use_container_width=True, config={"displayModeBar": False})
 
 with ch2:
-    fig_bar = go.Figure(
-        data=[go.Bar(
-            x=categories, y=[0]*len(values),
-            marker=dict(color=colors, line=dict(width=0)),
-            text=[rm(v) for v in values],
-            textposition="outside",
-            textfont=dict(color="#666", size=11),
-            hovertemplate="<b>%{x}</b><br>RM %{y:,.0f}<extra></extra>"
-        )],
-        frames=[go.Frame(data=[go.Bar(x=categories, y=values)])]
-    )
-    fig_bar.update_layout(
+    aaron_contrib = aaron or 0
+    andrea_contrib = andrea or 0
+    fig_contrib = go.Figure(data=[
+        go.Bar(name="Aaron",  x=["Contribution"], y=[0], marker_color="#7c6aff"),
+        go.Bar(name="Andrea", x=["Contribution"], y=[0], marker_color="#ec4899"),
+    ], frames=[go.Frame(data=[
+        go.Bar(name="Aaron",  x=["Contribution"], y=[aaron_contrib]),
+        go.Bar(name="Andrea", x=["Contribution"], y=[andrea_contrib]),
+    ])])
+    fig_contrib.update_layout(
         paper_bgcolor="#111111", plot_bgcolor="#111111",
         margin=dict(t=40, b=20, l=20, r=20),
+        barmode="group",
         xaxis=dict(showgrid=False, tickfont=dict(color="#666", size=12), linecolor="#1a1a1a"),
         yaxis=dict(showgrid=True, gridcolor="#1a1a1a", tickfont=dict(color="#555", size=11), linecolor="#1a1a1a"),
         height=280,
-        title=dict(text="Cost by Category", font=dict(color="#666", size=12), x=0.02),
+        title=dict(text="Aaron vs Andrea Contribution", font=dict(color="#666", size=12), x=0.02),
+        legend=dict(font=dict(color="#888", size=12), bgcolor="rgba(0,0,0,0)"),
         bargap=0.4,
         updatemenus=[dict(
             type="buttons", showactive=False, visible=False,
@@ -352,12 +270,12 @@ with ch2:
             }])]
         )]
     )
-    st.plotly_chart(fig_bar, use_container_width=True, config={"displayModeBar": False})
-    st.components.v1.html("""
+    st.plotly_chart(fig_contrib, use_container_width=True, config={"displayModeBar": False})
+    components.html("""
     <script>
     setTimeout(() => {
         const plots = window.parent.document.querySelectorAll('.js-plotly-plot');
-        plots.forEach(p => { if (p._fullLayout && p._fullLayout.updatemenus) Plotly.animate(p, null); });
+        plots.forEach(p => { try { Plotly.animate(p, null); } catch(e) {} });
     }, 500);
     </script>
     """, height=0)
@@ -444,3 +362,153 @@ show({
 if auto_refresh:
     time.sleep(3)
     st.rerun()
+
+# ── Overlays (welcome / greet) rendered on top of dashboard ───
+if st.session_state.page == "welcome":
+    components.html("""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+    body { background: transparent; overflow: hidden; }
+    .overlay {
+        position: fixed; top:0; left:0; width:100vw; height:100vh;
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        background: rgba(9,9,9,0.75);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        z-index: 9999;
+    }
+    .title { font-size:28px; font-weight:800; color:#fff; margin-bottom:6px; }
+    .sub { font-size:14px; color:#555; margin-bottom:48px; }
+    .peek-row { display:flex; align-items:center; justify-content:center; gap:16px; margin-bottom:40px; }
+    .card {
+        background:#111; border:1px solid #222; border-radius:14px;
+        padding:32px 24px; text-align:center; cursor:pointer;
+        transition: transform 0.25s, box-shadow 0.25s, opacity 0.25s;
+        width:160px;
+    }
+    .card.side { transform: scale(0.82) translateY(10px); opacity:0.35; pointer-events:none; }
+    .card.center { transform: scale(1.05); border-color:#7c6aff; box-shadow: 0 0 40px rgba(124,106,255,0.25); }
+    .card-btn { background:#111; border:1px solid #1f1f1f; border-radius:14px;
+        padding:32px 24px; text-align:center; cursor:pointer;
+        transition: transform 0.25s, box-shadow 0.25s;
+        width:160px; }
+    .card-btn:hover { transform:scale(1.08); border-color:#7c6aff; box-shadow:0 0 30px rgba(124,106,255,0.2); }
+    .emoji { font-size:44px; margin-bottom:10px; }
+    .name { font-size:16px; font-weight:700; color:#fff; }
+    </style>
+    </head>
+    <body>
+    <div class="overlay">
+        <div style="font-size:40px;margin-bottom:14px;">✈️ 🦘</div>
+        <div class="title">oi oi mate 👋</div>
+        <div class="sub">before we start... which bubs are you??</div>
+        <div class="peek-row">
+            <div class="card side"><div class="emoji">🌏</div><div class="name">???</div></div>
+            <div class="card-btn" onclick="select('Aaron')"><div class="emoji">🧑‍💻</div><div class="name">Aaron</div></div>
+            <div class="card center" style="pointer-events:none"><div class="emoji">🫵</div><div class="name">You</div></div>
+            <div class="card-btn" onclick="select('Andrea')"><div class="emoji">🥰</div><div class="name">Andrea</div></div>
+            <div class="card side"><div class="emoji">🌏</div><div class="name">???</div></div>
+        </div>
+    </div>
+    <script>
+    // Expand iframe to fullscreen
+    const iframe = window.frameElement;
+    if (iframe) {
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100vw';
+        iframe.style.height = '100vh';
+        iframe.style.zIndex = '9999';
+        iframe.style.border = 'none';
+        iframe.style.background = 'transparent';
+    }
+    function select(name) {
+        const url = new URL(window.parent.location.href);
+        url.searchParams.set('bubs', name);
+        window.parent.location.href = url.toString();
+    }
+    </script>
+    </body>
+    </html>
+    """, height=1)
+
+elif st.session_state.page == "greet":
+    bubs = st.session_state.bubs
+    if bubs == "Aaron":
+        emoji, msg, sub = "🧑‍💻", "Hello, Aaron The Bubs.", "Identity confirmed. Initialising expense matrix and flight telemetry. Standby for full mission briefing."
+    else:
+        emoji, msg, sub = "🥰", "Hello, Andrea The Bubs.", "Identity confirmed. Loading trip parameters and itinerary data. Please proceed to the dashboard."
+
+    components.html(f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+    * {{ margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }}
+    body {{ background: transparent; overflow: hidden; }}
+    .overlay {{
+        position: fixed; top:0; left:0; width:100vw; height:100vh;
+        backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        background: rgba(9,9,9,0.75);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; z-index: 9999; padding: 40px;
+    }}
+    .emoji {{ font-size:72px; margin-bottom:20px; }}
+    .title {{ font-size:32px; font-weight:800; color:#fff; margin-bottom:10px; }}
+    .sub {{ font-size:14px; color:#555; margin-bottom:40px; max-width:400px; line-height:1.6; }}
+    .btn {{
+        background:#7c6aff; color:#fff; border:none; border-radius:8px;
+        padding:12px 32px; font-size:15px; font-weight:600; cursor:pointer;
+        transition: background 0.2s; margin:6px;
+    }}
+    .btn:hover {{ background:#6a58ee; }}
+    .btn-ghost {{
+        background:transparent; color:#444; border:1px solid #222; border-radius:8px;
+        padding:10px 24px; font-size:13px; cursor:pointer; transition: color 0.2s; margin:6px;
+    }}
+    .btn-ghost:hover {{ color:#888; }}
+    </style>
+    </head>
+    <body>
+    <div class="overlay">
+        <div class="emoji">{emoji}</div>
+        <div class="title">{msg}</div>
+        <div class="sub">{sub}</div>
+        <div>
+            <button class="btn" onclick="goStart()">🚀 Let's gooo</button>
+        </div>
+        <div>
+            <button class="btn-ghost" onclick="goBack()">← not me lol</button>
+        </div>
+    </div>
+    <script>
+    const iframe = window.frameElement;
+    if (iframe) {{
+        iframe.style.position = 'fixed';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100vw';
+        iframe.style.height = '100vh';
+        iframe.style.zIndex = '9999';
+        iframe.style.border = 'none';
+        iframe.style.background = 'transparent';
+    }}
+    function goStart() {{
+        const url = new URL(window.parent.location.href);
+        url.searchParams.set('start', '1');
+        window.parent.location.href = url.toString();
+    }}
+    function goBack() {{
+        const url = new URL(window.parent.location.href);
+        url.searchParams.set('back', '1');
+        window.parent.location.href = url.toString();
+    }}
+    </script>
+    </body>
+    </html>
+    """, height=1)
