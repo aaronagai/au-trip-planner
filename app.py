@@ -6,7 +6,7 @@ import time
 
 CSV_PATH = "Melbourne_Sydney_Nov.csv"
 
-st.set_page_config(page_title="AU Trip · Nov 2025", layout="wide", page_icon="✈")
+st.set_page_config(page_title="AU Trip · Nov 2026", layout="wide", page_icon="✈")
 
 import streamlit.components.v1 as components
 
@@ -208,7 +208,7 @@ elif st.session_state.page == "greet":
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Melbourne & Sydney</div>', unsafe_allow_html=True)
-st.sidebar.markdown('<div class="label" style="margin-top:12px">Duration</div><div style="color:#fff;font-size:14px;">7 Nov – 20 Nov 2025</div>', unsafe_allow_html=True)
+st.sidebar.markdown('<div class="label" style="margin-top:12px">Duration</div><div style="color:#fff;font-size:14px;">7 Nov – 20 Nov 2026</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="label" style="margin-top:12px">Pax</div><div style="color:#fff;font-size:14px;">Aaron & Andrea</div>', unsafe_allow_html=True)
 
 def parse_rm(val):
@@ -247,7 +247,7 @@ andrea       = parse_rm(get(40,1))
 
 # Page title
 st.markdown('<div class="page-title">AU Trip Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Melbourne & Sydney · November 2025 · Two Pax</div>', unsafe_allow_html=True)
+st.markdown('<div class="page-sub">Melbourne & Sydney · November 2026 · Two Pax</div>', unsafe_allow_html=True)
 
 # Top KPI row
 kpi_items = [
@@ -306,8 +306,8 @@ with ch2:
     aaron_pct = round((aaron_contrib / total_contrib) * 100) if total_contrib else 0
     andrea_pct = 100 - aaron_pct
     fig_contrib = go.Figure(data=[
-        go.Bar(name="Aaron",  y=["Contribution"], x=[aaron_contrib],  orientation="h", marker_color="#7c6aff", text=f"Aaron {aaron_pct}%", textposition="inside", textfont=dict(color="#fff", size=12)),
-        go.Bar(name="Andrea", y=["Contribution"], x=[andrea_contrib], orientation="h", marker_color="#ec4899", text=f"Andrea {andrea_pct}%", textposition="inside", textfont=dict(color="#fff", size=12)),
+        go.Bar(name="Aaron",  y=["Contribution"], x=[aaron_contrib],  orientation="h", marker_color="#7c6aff"),
+        go.Bar(name="Andrea", y=["Contribution"], x=[andrea_contrib], orientation="h", marker_color="#ec4899"),
     ])
     fig_contrib.update_layout(
         paper_bgcolor="#111111", plot_bgcolor="#111111",
@@ -351,62 +351,62 @@ for label, val, total, color in [
     """, unsafe_allow_html=True)
 
 # Tables
-st.markdown('<div class="section-header">Flights</div>', unsafe_allow_html=True)
-notes = [get(r,8) for r in [4,5,6,7,8]]
-flights_df = pd.DataFrame({
-    "Date":        [get(r,0) for r in [4,5,6,7,8]],
-    "Destination": [get(r,1) for r in [4,5,6,7,8]],
-    "Departure":   [get(r,2) for r in [4,5,6,7,8]],
-    "Arrival":     [get(r,3) for r in [4,5,6,7,8]],
-    "Airline":     [get(r,4) for r in [4,5,6,7,8]],
-    "Flight No.":  [get(r,5) for r in [4,5,6,7,8]],
-    "Dep / Arr":   [get(r,6) for r in [4,5,6,7,8]],
-    "Cost":        [get(r,7) for r in [4,5,6,7,8]],
-    "Lounge":      [lounge_url(n) for n in notes],
-})
-st.dataframe(flights_df, hide_index=True, use_container_width=True, column_config={
-    "Lounge": st.column_config.LinkColumn("Lounge", display_text="Available")
-})
+with st.expander("Flights"):
+    notes = [get(r,8) for r in [4,5,6,7,8]]
+    flights_df = pd.DataFrame({
+        "Date":        [get(r,0) for r in [4,5,6,7,8]],
+        "Destination": [get(r,1) for r in [4,5,6,7,8]],
+        "Departure":   [get(r,2) for r in [4,5,6,7,8]],
+        "Arrival":     [get(r,3) for r in [4,5,6,7,8]],
+        "Airline":     [get(r,4) for r in [4,5,6,7,8]],
+        "Flight No.":  [get(r,5) for r in [4,5,6,7,8]],
+        "Dep / Arr":   [get(r,6) for r in [4,5,6,7,8]],
+        "Cost":        [get(r,7) for r in [4,5,6,7,8]],
+        "Lounge":      [lounge_url(n) for n in notes],
+    })
+    st.dataframe(flights_df, hide_index=True, use_container_width=True, column_config={
+        "Lounge": st.column_config.LinkColumn("Lounge", display_text="Available")
+    })
 
-st.markdown('<div class="section-header">Accommodation</div>', unsafe_allow_html=True)
-show({
-    "Date":         [get(r,0) for r in [13,14]],
-    "City":         [get(r,1) for r in [13,14]],
-    "Accommodation":[get(r,2) for r in [13,14]],
-    "Check In":     [get(r,3) for r in [13,14]],
-    "Check Out":    [get(r,4) for r in [13,14]],
-    "Nights":       [get(r,5) for r in [13,14]],
-    "Budget/Night": [get(r,6) for r in [13,14]],
-    "Total":        [get(r,7) for r in [13,14]],
-})
+with st.expander("Accommodation"):
+    show({
+        "Date":         [get(r,0) for r in [13,14]],
+        "City":         [get(r,1) for r in [13,14]],
+        "Accommodation":[get(r,2) for r in [13,14]],
+        "Check In":     [get(r,3) for r in [13,14]],
+        "Check Out":    [get(r,4) for r in [13,14]],
+        "Nights":       [get(r,5) for r in [13,14]],
+        "Budget/Night": [get(r,6) for r in [13,14]],
+        "Total":        [get(r,7) for r in [13,14]],
+    })
 
 tl, tr = st.columns(2)
 with tl:
-    st.markdown('<div class="section-header">Food</div>', unsafe_allow_html=True)
-    show({
-        "Dates":          [get(r,0) for r in [19,20]],
-        "City":           [get(r,1) for r in [19,20]],
-        "Days":           [get(r,2) for r in [19,20]],
-        "Daily Estimate": [get(r,3) for r in [19,20]],
-        "Total":          [get(r,4) for r in [19,20]],
-    })
+    with st.expander("Food"):
+        show({
+            "Dates":          [get(r,0) for r in [19,20]],
+            "City":           [get(r,1) for r in [19,20]],
+            "Days":           [get(r,2) for r in [19,20]],
+            "Daily Estimate": [get(r,3) for r in [19,20]],
+            "Total":          [get(r,4) for r in [19,20]],
+        })
 
 with tr:
-    st.markdown('<div class="section-header">Transportation</div>', unsafe_allow_html=True)
-    show({
-        "Dates":          [get(r,0) for r in [25,26]],
-        "City":           [get(r,1) for r in [25,26]],
-        "Days":           [get(r,2) for r in [25,26]],
-        "Daily Estimate": [get(r,3) for r in [25,26]],
-        "Total":          [get(r,4) for r in [25,26]],
-        "Notes":          [get(r,5) for r in [25,26]],
-    })
+    with st.expander("Transportation"):
+        show({
+            "Dates":          [get(r,0) for r in [25,26]],
+            "City":           [get(r,1) for r in [25,26]],
+            "Days":           [get(r,2) for r in [25,26]],
+            "Daily Estimate": [get(r,3) for r in [25,26]],
+            "Total":          [get(r,4) for r in [25,26]],
+            "Notes":          [get(r,5) for r in [25,26]],
+        })
 
-st.markdown('<div class="section-header">Activities & Utilities</div>', unsafe_allow_html=True)
-show({
-    "Item":           [get(r,1) for r in [32,33,34]],
-    "Cost (Two Pax)": [get(r,2) for r in [32,33,34]],
-})
+with st.expander("Activities & Utilities"):
+    show({
+        "Item":           [get(r,1) for r in [32,33,34]],
+        "Cost (Two Pax)": [get(r,2) for r in [32,33,34]],
+    })
 
 if auto_refresh:
     time.sleep(3)
