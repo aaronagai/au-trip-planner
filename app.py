@@ -242,8 +242,8 @@ food_total   = sum(filter(None, [parse_rm(get(r,4)) for r in [19,20]]))
 transport_total = sum(filter(None, [parse_rm(get(r,4)) for r in [25,26]]))
 act_total    = sum(filter(None, [parse_rm(get(r,2)) for r in [32,33,34]]))
 grand_total  = flight_total + accom_total + food_total + transport_total + act_total
-aaron        = parse_rm(get(37,1))
-andrea       = parse_rm(get(38,1))
+aaron        = parse_rm(get(39,1))
+andrea       = parse_rm(get(40,1))
 
 # Page title
 st.markdown('<div class="page-title">AU Trip Dashboard</div>', unsafe_allow_html=True)
