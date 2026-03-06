@@ -113,6 +113,9 @@ st.markdown("""
 }
 
 #MainMenu, footer, header { visibility: hidden; }
+
+/* Remove expander border */
+div[data-testid="stExpander"] { border: none !important; box-shadow: none !important; }
 div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1a1a; }
 
 /* Mobile responsive */
