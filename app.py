@@ -331,7 +331,7 @@ with tr:
             "Notes":          [get(r,5) for r in [25,26]],
         })
 
-with st.expander("Activities & Utilities"):
+with st.expander("Utilities & Others"):
     show({
         "Item":           [get(r,1) for r in [32,33,34]],
         "Cost (Two Pax)": [get(r,2) for r in [32,33,34]],
