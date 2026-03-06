@@ -10,27 +10,6 @@ st.set_page_config(page_title="AU Trip · Nov 2026", layout="wide", page_icon="�
 
 import streamlit.components.v1 as components
 
-# Session state init
-if "page" not in st.session_state:
-    st.session_state.page = "welcome"
-if "bubs" not in st.session_state:
-    st.session_state.bubs = None
-
-# Handle URL param state transitions
-params = st.query_params
-if "bubs" in params:
-    st.session_state.bubs = params["bubs"]
-    st.session_state.page = "greet"
-    st.query_params.clear()
-    st.rerun()
-if "start" in params:
-    st.session_state.page = "dashboard"
-    st.query_params.clear()
-    st.rerun()
-if "back" in params:
-    st.session_state.page = "welcome"
-    st.query_params.clear()
-    st.rerun()
 
 st.markdown("""
 <style>
@@ -145,64 +124,6 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 }
 </style>
 """, unsafe_allow_html=True)
-
-# ── Welcome page ──────────────────────────────────────────────
-if st.session_state.page == "welcome":
-    st.markdown("""
-    <style>
-    .stApp { background: radial-gradient(ellipse at 60% 40%, #1a1040 0%, #090909 60%); }
-    .peek-row { display:flex; align-items:center; justify-content:center; gap:16px; margin:40px 0; }
-    .peek-side {
-        background:#111; border:1px solid #1a1a1a; border-radius:14px;
-        padding:32px 20px; text-align:center; width:130px;
-        transform: scale(0.8) translateY(12px); opacity:0.25;
-    }
-    .peek-emoji { font-size:36px; margin-bottom:8px; }
-    .peek-name { font-size:13px; font-weight:600; color:#444; }
-    </style>
-    <div style="text-align:center;padding-top:80px;">
-        <div style="font-size:44px;margin-bottom:14px;">✈️ 🦘</div>
-        <div style="font-size:30px;font-weight:800;color:#fff;margin-bottom:8px;">oi oi mate 👋</div>
-        <div style="font-size:14px;color:#444;margin-bottom:0;">before we start... which bubs are you??</div>
-    </div>
-    """, unsafe_allow_html=True)
-    _, c, _ = st.columns([1, 2, 1])
-    with c:
-        b1, b2 = st.columns(2)
-        if b1.button("🧑‍💻 Aaron", use_container_width=True):
-            st.session_state.bubs = "Aaron"
-            st.session_state.page = "greet"
-            st.rerun()
-        if b2.button("🥰 Andrea", use_container_width=True):
-            st.session_state.bubs = "Andrea"
-            st.session_state.page = "greet"
-            st.rerun()
-    st.stop()
-
-# ── Greet page ────────────────────────────────────────────────
-elif st.session_state.page == "greet":
-    bubs = st.session_state.bubs
-    if bubs == "Aaron":
-        emoji, msg, sub = "🧑‍💻", "Hello, Aaron The Bubs.", "Identity confirmed. Initialising expense matrix and flight telemetry. Standby for full mission briefing."
-    else:
-        emoji, msg, sub = "🥰", "Hello, Andrea The Bubs.", "Identity confirmed. Loading trip parameters and itinerary data. Please proceed to the dashboard."
-    st.markdown(f"""
-    <style>.stApp {{ background: radial-gradient(ellipse at 40% 60%, #1a1040 0%, #090909 60%); }}</style>
-    <div style="text-align:center;padding-top:100px;">
-        <div style="font-size:72px;margin-bottom:20px;">{emoji}</div>
-        <div style="font-size:32px;font-weight:800;color:#fff;margin-bottom:12px;">{msg}</div>
-        <div style="font-size:14px;color:#444;margin-bottom:48px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.7;">{sub}</div>
-    </div>
-    """, unsafe_allow_html=True)
-    _, c, _ = st.columns([1, 2, 1])
-    with c:
-        if st.button("🚀 Let's gooo", use_container_width=True):
-            st.session_state.page = "dashboard"
-            st.rerun()
-        if st.button("← not me lol", use_container_width=True):
-            st.session_state.page = "welcome"
-            st.rerun()
-    st.stop()
 
 # ── Dashboard ──────────────────────────────────────────────────
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
