@@ -280,7 +280,7 @@ for label, val, total, color in [
     """, unsafe_allow_html=True)
 
 # Calendar View
-st.markdown('<div class="section-header">Itinerary Calendar</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-header">Calendar View</div>', unsafe_allow_html=True)
 
 from datetime import datetime
 
