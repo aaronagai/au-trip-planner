@@ -312,21 +312,17 @@ for _ in range(base_dow):
 
 for day in range(8, 20):
     if day in flight_map:
-        route, fno = flight_map[day]
-        bg, border, tc, label, sub = "#130e1e", "#7c6aff", "#7c6aff", route, fno
+        bg, border = "#2a1f4a", "#7c6aff"
     elif day in stay_map:
         city, color = stay_map[day]
-        bg = "#0d1520" if "Sydney" in city else "#0d1a10"
-        border, tc, label, sub = color, color, city, ""
+        bg     = "#0d1a2e" if "Sydney" in city else "#0d2010"
+        border = color
     else:
-        bg, border, tc, label, sub = "#0d0d0d", "#1a1a1a", "#444", "", ""
-    sub_tag = ("<div style='font-size:10px;color:#555;margin-top:2px;'>" + sub + "</div>") if sub else ""
+        bg, border = "#111111", "#1f1f1f"
     cells_html += (
         "<div style='background:" + bg + ";border:1px solid " + border + ";border-radius:6px;"
-        "padding:8px 6px;min-height:62px;'>"
-        "<div style='font-size:10px;color:#444;margin-bottom:3px;'>" + str(day) + " Nov</div>"
-        "<div style='font-size:11px;font-weight:600;color:" + tc + ";line-height:1.3;'>" + label + "</div>"
-        + sub_tag +
+        "padding:8px 6px;min-height:48px;display:flex;align-items:flex-end;'>"
+        "<div style='font-size:10px;color:#555;'>" + str(day) + "</div>"
         "</div>"
     )
 
@@ -341,7 +337,7 @@ cal_full = (
     + headers_html + cells_html +
     "</div></div>"
 )
-components.html(cal_full, height=260)
+components.html(cal_full, height=220)
 
 # Tables
 st.markdown("---")
