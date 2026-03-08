@@ -135,7 +135,7 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 # ── Dashboard ──────────────────────────────────────────────────
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
-st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Melbourne & Sydney</div>', unsafe_allow_html=True)
+st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Sydney & Melbourne</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="label" style="margin-top:12px">Duration</div><div style="color:#fff;font-size:14px;">7 Nov – 20 Nov 2026</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="label" style="margin-top:12px">Pax</div><div style="color:#fff;font-size:14px;">Aaron & Andrea</div>', unsafe_allow_html=True)
 
@@ -174,16 +174,17 @@ aaron        = parse_rm(get(39,1))
 andrea       = parse_rm(get(40,1))
 
 # Page title
-st.markdown('<div class="page-title">AU Trip Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Melbourne & Sydney · November 2026 · Two Pax</div>', unsafe_allow_html=True)
+st.markdown('<div class="page-title">Australia Trip Dashboard</div>', unsafe_allow_html=True)
+st.markdown('<div class="page-sub">Sydney & Melbourne · November 2026 · Two Pax</div>', unsafe_allow_html=True)
 
 # Top KPI row
 kpi_items = [
     ("Grand Total",    rm(grand_total),  "All expenses"),
     ("Flights",        rm(flight_total), "5 segments"),
-    ("Accommodation",  rm(accom_total),  "9 nights"),
+    ("Accommodation",  rm(accom_total),  "10 nights"),
     ("Food",           rm(food_total),   "Both cities"),
     ("Transport",      rm(transport_total), "Both cities"),
+    ("Utilities",      rm(act_total),    "Visa, roaming, insurance"),
 ]
 kpi_html = '<div style="background:#111111;border:1px solid #1f1f1f;border-radius:10px;overflow:hidden;margin-bottom:16px;">'
 for i, (label, val, sub) in enumerate(kpi_items):
