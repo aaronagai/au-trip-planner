@@ -175,7 +175,7 @@ andrea       = parse_rm(get(40,1))
 
 # Page title
 st.markdown('<div class="page-title">Australia Trip Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Sydney & Melbourne · November 2026 · Two Pax</div>', unsafe_allow_html=True)
+st.markdown('<div class="page-sub">Sydney & Melbourne · 7 – 20 Nov 2026 · Two Pax</div>', unsafe_allow_html=True)
 
 # Top KPI row
 kpi_items = [
