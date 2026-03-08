@@ -332,7 +332,8 @@ headers_html = "".join(
 )
 
 cal_full = (
-    "<div style='background:#111111;border:1px solid #1f1f1f;border-radius:8px;padding:16px;'>"
+    "<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' rel='stylesheet'>"
+    "<div style='font-family:Inter,sans-serif;background:#111111;border:1px solid #1f1f1f;border-radius:8px;padding:16px;'>"
     "<div style='display:grid;grid-template-columns:repeat(7,1fr);gap:5px;'>"
     + headers_html + cells_html +
     "</div></div>"
