@@ -279,6 +279,58 @@ for label, val, total, color in [
     </div>
     """, unsafe_allow_html=True)
 
+# Calendar View
+st.markdown('<div class="section-header">Itinerary Calendar</div>', unsafe_allow_html=True)
+
+from datetime import datetime, timedelta
+
+def parse_day(s):
+    try: return int(str(s).strip().split()[0])
+    except: return None
+
+stay_map = {}
+for r, color in [(13, "#3b82f6"), (14, "#22c55e")]:
+    city = get(r, 1)
+    cin  = parse_day(get(r, 3))
+    cout = parse_day(get(r, 4))
+    if city and cin and cout:
+        for d in range(cin, cout):
+            stay_map[d] = (city, color)
+
+flight_map = {}
+for r in [4, 5, 6, 7, 8]:
+    d     = parse_day(get(r, 0))
+    route = get(r, 1).replace("\n", " ")
+    fno   = get(r, 5)
+    if d and 8 <= d <= 19:
+        flight_map[d] = (route, fno)
+
+base_dow = datetime(2026, 11, 8).weekday()  # Saturday = 5
+cal_html = '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:4px;">'
+for h in ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]:
+    cal_html += f'<div style="text-align:center;font-size:10px;color:#444;padding:3px 0;">{h}</div>'
+for _ in range(base_dow):
+    cal_html += '<div></div>'
+
+for day in range(8, 20):
+    if day in flight_map:
+        route, fno = flight_map[day]
+        bg, border, tc, label, sub = "#130e1e", "#7c6aff", "#7c6aff", route, fno
+    elif day in stay_map:
+        city, color = stay_map[day]
+        bg     = "#0d1520" if "Sydney" in city else "#0d1a10"
+        border, tc, label, sub = color, color, city, ""
+    else:
+        bg, border, tc, label, sub = "#0d0d0d", "#1a1a1a", "#333", "", ""
+    sub_html = f'<div style="font-size:10px;color:#555;margin-top:2px;">{sub}</div>' if sub else ""
+    cal_html += f'''<div style="background:{bg};border:1px solid {border};border-radius:6px;padding:8px 6px;min-height:62px;">
+        <div style="font-size:10px;color:#444;margin-bottom:3px;">{day} Nov</div>
+        <div style="font-size:11px;font-weight:600;color:{tc};line-height:1.3;">{label}</div>
+        {sub_html}
+    </div>'''
+cal_html += '</div>'
+st.markdown(cal_html, unsafe_allow_html=True)
+
 # Tables
 st.markdown("---")
 with st.expander("Flights"):
