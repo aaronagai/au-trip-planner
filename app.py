@@ -337,7 +337,7 @@ cal_full = (
     + headers_html + cells_html +
     "</div></div>"
 )
-components.html(cal_full, height=220)
+components.html(cal_full, height=300)
 
 # Tables
 st.markdown("---")
