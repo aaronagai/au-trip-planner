@@ -152,10 +152,6 @@ def load_from_csv():
         try: return float(val)
         except: return 0.0
 
-    def get_int(r, c):
-        try: return int(str(get(r, c)).strip())
-        except: return 0
-
     flights = pd.DataFrame({
         "Date":        [get(r, 0) for r in [4, 5, 6, 7, 8]],
         "Destination": [get(r, 1) for r in [4, 5, 6, 7, 8]],
@@ -174,26 +170,20 @@ def load_from_csv():
         "Accommodation": [get(r, 2) for r in [13, 14]],
         "Check In":      [get(r, 3) for r in [13, 14]],
         "Check Out":     [get(r, 4) for r in [13, 14]],
-        "Nights":        [get_int(r, 5) for r in [13, 14]],
-        "Budget/Night":  [get_rm(r, 6) for r in [13, 14]],
         "Total (RM)":    [get_rm(r, 7) for r in [13, 14]],
     })
 
     food = pd.DataFrame({
-        "Dates":           [get(r, 0) for r in [19, 20]],
-        "City":            [get(r, 1) for r in [19, 20]],
-        "Days":            [get_int(r, 2) for r in [19, 20]],
-        "Daily Est. (RM)": [get_rm(r, 3) for r in [19, 20]],
-        "Total (RM)":      [get_rm(r, 4) for r in [19, 20]],
+        "Dates":      [get(r, 0) for r in [19, 20]],
+        "City":       [get(r, 1) for r in [19, 20]],
+        "Total (RM)": [get_rm(r, 4) for r in [19, 20]],
     })
 
     transport = pd.DataFrame({
-        "Dates":           [get(r, 0) for r in [25, 26]],
-        "City":            [get(r, 1) for r in [25, 26]],
-        "Days":            [get_int(r, 2) for r in [25, 26]],
-        "Daily Est. (RM)": [get_rm(r, 3) for r in [25, 26]],
-        "Total (RM)":      [get_rm(r, 4) for r in [25, 26]],
-        "Notes":           [get(r, 5) for r in [25, 26]],
+        "Dates":      [get(r, 0) for r in [25, 26]],
+        "City":       [get(r, 1) for r in [25, 26]],
+        "Notes":      [get(r, 5) for r in [25, 26]],
+        "Total (RM)": [get_rm(r, 4) for r in [25, 26]],
     })
 
     utilities = pd.DataFrame({
@@ -489,48 +479,33 @@ with st.expander("Accommodation"):
     edited = st.data_editor(
         st.session_state.accom, hide_index=True, use_container_width=True, num_rows="fixed",
         column_config={
-            "Nights":       st.column_config.NumberColumn("Nights", min_value=0, step=1),
-            "Budget/Night": st.column_config.NumberColumn("Budget/Night (RM)", format="RM %.0f", min_value=0),
-            "Total (RM)":   st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
+            "Total (RM)": st.column_config.NumberColumn("Total (RM)", format="RM %.0f", min_value=0),
         }
     )
-    input_cols = ["Date", "City", "Accommodation", "Check In", "Check Out", "Nights", "Budget/Night"]
-    if not edited[input_cols].equals(st.session_state.accom[input_cols]):
-        upd = edited.copy()
-        upd["Total (RM)"] = upd["Nights"].astype(float) * upd["Budget/Night"]
-        st.session_state.accom = upd
+    if not edited.equals(st.session_state.accom):
+        st.session_state.accom = edited
         st.rerun()
 
 with st.expander("Food"):
     edited = st.data_editor(
         st.session_state.food, hide_index=True, use_container_width=True, num_rows="fixed",
         column_config={
-            "Days":            st.column_config.NumberColumn("Days", min_value=0, step=1),
-            "Daily Est. (RM)": st.column_config.NumberColumn("Daily Est. (RM)", format="RM %.0f", min_value=0),
-            "Total (RM)":      st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
+            "Total (RM)": st.column_config.NumberColumn("Total (RM)", format="RM %.0f", min_value=0),
         }
     )
-    input_cols = ["Dates", "City", "Days", "Daily Est. (RM)"]
-    if not edited[input_cols].equals(st.session_state.food[input_cols]):
-        upd = edited.copy()
-        upd["Total (RM)"] = upd["Days"].astype(float) * upd["Daily Est. (RM)"]
-        st.session_state.food = upd
+    if not edited.equals(st.session_state.food):
+        st.session_state.food = edited
         st.rerun()
 
 with st.expander("Transportation"):
     edited = st.data_editor(
         st.session_state.transport, hide_index=True, use_container_width=True, num_rows="fixed",
         column_config={
-            "Days":            st.column_config.NumberColumn("Days", min_value=0, step=1),
-            "Daily Est. (RM)": st.column_config.NumberColumn("Daily Est. (RM)", format="RM %.0f", min_value=0),
-            "Total (RM)":      st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
+            "Total (RM)": st.column_config.NumberColumn("Total (RM)", format="RM %.0f", min_value=0),
         }
     )
-    input_cols = ["Dates", "City", "Days", "Daily Est. (RM)", "Notes"]
-    if not edited[input_cols].equals(st.session_state.transport[input_cols]):
-        upd = edited.copy()
-        upd["Total (RM)"] = upd["Days"].astype(float) * upd["Daily Est. (RM)"]
-        st.session_state.transport = upd
+    if not edited.equals(st.session_state.transport):
+        st.session_state.transport = edited
         st.rerun()
 
 with st.expander("Utilities & Others"):
