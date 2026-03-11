@@ -327,7 +327,7 @@ if cal_mode == "Travel":
             bg, border = "#111111", "#1f1f1f"
         cells_html += (
             "<div style='background:" + bg + ";border:1px solid " + border + ";border-radius:6px;"
-            "padding:8px 6px;min-height:48px;display:flex;align-items:flex-end;'>"
+            "padding:10px 8px;min-height:56px;display:flex;align-items:flex-end;'>"
             "<div style='font-size:10px;color:#555;'>" + str(day) + "</div>"
             "</div>"
         )
@@ -370,7 +370,7 @@ else:
             bg, border = "#111111", "#1f1f1f"
         cells_html += (
             "<div style='background:" + bg + ";border:1px solid " + border + ";border-radius:6px;"
-            "padding:8px 6px;min-height:48px;display:flex;align-items:flex-end;'>"
+            "padding:10px 8px;min-height:56px;display:flex;align-items:flex-end;'>"
             "<div style='font-size:10px;color:#555;'>" + str(day) + "</div>"
             "</div>"
         )
@@ -402,11 +402,11 @@ headers_html = "".join(
 cal_full = (
     "<link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap' rel='stylesheet'>"
     "<div style='font-family:Inter,sans-serif;background:#111111;border:1px solid #1f1f1f;border-radius:8px;padding:16px;'>"
-    "<div style='display:grid;grid-template-columns:repeat(7,1fr);gap:5px;'>"
+    "<div style='display:grid;grid-template-columns:repeat(7,1fr);gap:8px;'>"
     + headers_html + cells_html +
     "</div>" + legend_html + "</div>"
 )
-components.html(cal_full, height=300)
+components.html(cal_full, height=330)
 
 # Tables
 st.markdown('<hr style="border:none;border-top:1px solid #1a1a1a;margin:12px 0;">', unsafe_allow_html=True)
