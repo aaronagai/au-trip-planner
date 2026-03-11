@@ -406,10 +406,9 @@ cal_full = (
     + headers_html + cells_html +
     "</div>" + legend_html + "</div>"
 )
-components.html(cal_full, height=420)
+components.html(cal_full, height=300)
 
 # Tables
-st.markdown("---")
 with st.expander("Flights"):
     notes = [get(r,8) for r in [4,5,6,7,8]]
     flights_df = pd.DataFrame({
