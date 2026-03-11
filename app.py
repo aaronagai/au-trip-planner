@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 import time
+from datetime import datetime
 
 CSV_PATH = "Melbourne_Sydney_Nov.csv"
 
@@ -135,59 +136,125 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 </style>
 """, unsafe_allow_html=True)
 
-# ── Dashboard ──────────────────────────────────────────────────
+# ── Load data from CSV ──────────────────────────────────────────
+@st.cache_data
+def load_from_csv():
+    raw = pd.read_csv(CSV_PATH, header=None)
+
+    def get(r, c):
+        try:
+            v = raw.iloc[r, c]
+            return "" if pd.isna(v) else str(v).strip().replace("\r\n", " ").replace("\n", " ")
+        except: return ""
+
+    def get_rm(r, c):
+        val = get(r, c).replace("RM", "").replace(",", "").strip()
+        try: return float(val)
+        except: return 0.0
+
+    def get_int(r, c):
+        try: return int(str(get(r, c)).strip())
+        except: return 0
+
+    flights = pd.DataFrame({
+        "Date":        [get(r, 0) for r in [4, 5, 6, 7, 8]],
+        "Destination": [get(r, 1) for r in [4, 5, 6, 7, 8]],
+        "Departure":   [get(r, 2) for r in [4, 5, 6, 7, 8]],
+        "Arrival":     [get(r, 3) for r in [4, 5, 6, 7, 8]],
+        "Airline":     [get(r, 4) for r in [4, 5, 6, 7, 8]],
+        "Flight No.":  [get(r, 5) for r in [4, 5, 6, 7, 8]],
+        "Dep / Arr":   [get(r, 6) for r in [4, 5, 6, 7, 8]],
+        "Cost (RM)":   [get_rm(r, 7) for r in [4, 5, 6, 7, 8]],
+        "Lounge":      [get(r, 8) if get(r, 8).startswith("http") else "" for r in [4, 5, 6, 7, 8]],
+    })
+
+    accom = pd.DataFrame({
+        "Date":          [get(r, 0) for r in [13, 14]],
+        "City":          [get(r, 1) for r in [13, 14]],
+        "Accommodation": [get(r, 2) for r in [13, 14]],
+        "Check In":      [get(r, 3) for r in [13, 14]],
+        "Check Out":     [get(r, 4) for r in [13, 14]],
+        "Nights":        [get_int(r, 5) for r in [13, 14]],
+        "Budget/Night":  [get_rm(r, 6) for r in [13, 14]],
+        "Total (RM)":    [get_rm(r, 7) for r in [13, 14]],
+    })
+
+    food = pd.DataFrame({
+        "Dates":           [get(r, 0) for r in [19, 20]],
+        "City":            [get(r, 1) for r in [19, 20]],
+        "Days":            [get_int(r, 2) for r in [19, 20]],
+        "Daily Est. (RM)": [get_rm(r, 3) for r in [19, 20]],
+        "Total (RM)":      [get_rm(r, 4) for r in [19, 20]],
+    })
+
+    transport = pd.DataFrame({
+        "Dates":           [get(r, 0) for r in [25, 26]],
+        "City":            [get(r, 1) for r in [25, 26]],
+        "Days":            [get_int(r, 2) for r in [25, 26]],
+        "Daily Est. (RM)": [get_rm(r, 3) for r in [25, 26]],
+        "Total (RM)":      [get_rm(r, 4) for r in [25, 26]],
+        "Notes":           [get(r, 5) for r in [25, 26]],
+    })
+
+    utilities = pd.DataFrame({
+        "Item":      [get(r, 1) for r in [32, 33, 34]],
+        "Cost (RM)": [get_rm(r, 2) for r in [32, 33, 34]],
+    })
+
+    aaron  = get_rm(39, 1)
+    andrea = get_rm(40, 1)
+
+    return flights, accom, food, transport, utilities, aaron, andrea
+
+# ── Session state init ──────────────────────────────────────────
+if "flights" not in st.session_state:
+    f, a, fd, tr, ut, aaron_v, andrea_v = load_from_csv()
+    st.session_state.flights   = f
+    st.session_state.accom     = a
+    st.session_state.food      = fd
+    st.session_state.transport = tr
+    st.session_state.utilities = ut
+    st.session_state.aaron     = aaron_v
+    st.session_state.andrea    = andrea_v
+
+# ── Sidebar ──────────────────────────────────────────────────
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Sydney & Melbourne</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="label" style="margin-top:12px">Duration</div><div style="color:#fff;font-size:14px;">6 Nov – 15 Nov 2026</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="label" style="margin-top:12px">Pax</div><div style="color:#fff;font-size:14px;">Aaron & Andrea</div>', unsafe_allow_html=True)
-
-def parse_rm(val):
-    if pd.isna(val): return None
-    val = str(val).replace("RM", "").replace(",", "").strip()
-    try: return float(val)
-    except: return None
+st.sidebar.markdown("---")
+if st.sidebar.button("↺ Reset to original"):
+    for key in ["flights", "accom", "food", "transport", "utilities", "aaron", "andrea"]:
+        st.session_state.pop(key, None)
+    st.rerun()
 
 def rm(val, decimals=0):
     if val is None: return "—"
     return f"RM {val:,.{decimals}f}"
 
-def show(data):
-    st.dataframe(pd.DataFrame(data), hide_index=True, use_container_width=True)
+# ── Compute totals from session state ──────────────────────────
+flight_total    = st.session_state.flights["Cost (RM)"].sum()
+accom_total     = st.session_state.accom["Total (RM)"].sum()
+food_total      = st.session_state.food["Total (RM)"].sum()
+transport_total = st.session_state.transport["Total (RM)"].sum()
+act_total       = st.session_state.utilities["Cost (RM)"].sum()
+grand_total     = flight_total + accom_total + food_total + transport_total + act_total
+aaron           = st.session_state.aaron
+andrea          = st.session_state.andrea
 
-df = pd.read_csv(CSV_PATH, header=None)
-
-def get(r, c):
-    try:
-        v = df.iloc[r, c]
-        return "" if pd.isna(v) else str(v).strip().replace("\r\n", "\n")
-    except: return ""
-
-def lounge_url(val):
-    return val if val.startswith("http") else ""
-
-# Parse data
-flight_total = sum(filter(None, [parse_rm(get(r,7)) for r in [4,5,6,7,8]]))
-accom_total  = sum(filter(None, [parse_rm(get(r,7)) for r in [13,14]]))
-food_total   = sum(filter(None, [parse_rm(get(r,4)) for r in [19,20]]))
-transport_total = sum(filter(None, [parse_rm(get(r,4)) for r in [25,26]]))
-act_total    = sum(filter(None, [parse_rm(get(r,2)) for r in [32,33,34]]))
-grand_total  = flight_total + accom_total + food_total + transport_total + act_total
-aaron        = parse_rm(get(39,1))
-andrea       = parse_rm(get(40,1))
-
-# Page title
+# ── Page title ──────────────────────────────────────────────────
 st.markdown('<div class="page-title">Australia Trip Dashboard</div>', unsafe_allow_html=True)
 st.markdown('<div class="page-sub">Sydney & Melbourne · 6 – 15 Nov 2026 · Two Pax</div>', unsafe_allow_html=True)
 
-# Top KPI row
+# ── Top KPI row ──────────────────────────────────────────────────
 kpi_items = [
-    ("Grand Total",    rm(grand_total),  "All expenses"),
-    ("Flights",        rm(flight_total), "5 segments"),
-    ("Accommodation",  rm(accom_total),  "8 nights"),
-    ("Food",           rm(food_total),   "Both cities"),
-    ("Transport",      rm(transport_total), "Both cities"),
-    ("Utilities",      rm(act_total),    "Visa, roaming, insurance"),
+    ("Grand Total",   rm(grand_total),      "All expenses"),
+    ("Flights",       rm(flight_total),     "5 segments"),
+    ("Accommodation", rm(accom_total),      "8 nights"),
+    ("Food",          rm(food_total),       "Both cities"),
+    ("Transport",     rm(transport_total),  "Both cities"),
+    ("Utilities",     rm(act_total),        "Visa, roaming, insurance"),
 ]
 kpi_html = '<div style="background:#111111;border:1px solid #1f1f1f;border-radius:10px;overflow:hidden;margin-bottom:16px;">'
 for i, (label, val, sub) in enumerate(kpi_items):
@@ -201,7 +268,7 @@ for i, (label, val, sub) in enumerate(kpi_items):
 kpi_html += '</div>'
 st.markdown(kpi_html, unsafe_allow_html=True)
 
-# Charts row
+# ── Charts row ──────────────────────────────────────────────────
 st.markdown('<div class="section-header">Breakdown</div>', unsafe_allow_html=True)
 ch1, ch2 = st.columns([1, 1])
 
@@ -232,11 +299,11 @@ with ch1:
     st.plotly_chart(fig_donut, use_container_width=True, config={"displayModeBar": False})
 
 with ch2:
-    aaron_contrib = aaron or 0
+    aaron_contrib  = aaron or 0
     andrea_contrib = andrea or 0
-    total_contrib = aaron_contrib + andrea_contrib
-    aaron_pct = round((aaron_contrib / total_contrib) * 100) if total_contrib else 0
-    andrea_pct = 100 - aaron_pct
+    total_contrib  = aaron_contrib + andrea_contrib
+    aaron_pct      = round((aaron_contrib / total_contrib) * 100) if total_contrib else 0
+    andrea_pct     = 100 - aaron_pct
     fig_contrib = go.Figure(data=[
         go.Bar(name="Aaron",  y=["Contribution"], x=[aaron_contrib],  orientation="h", marker_color="#7c6aff", width=0.3),
         go.Bar(name="Andrea", y=["Contribution"], x=[andrea_contrib], orientation="h", marker_color="#ec4899", width=0.3),
@@ -261,12 +328,8 @@ with ch2:
     </script>
     """, height=0)
 
-# Budget progress bars
+# ── Budget progress bars ──────────────────────────────────────────
 st.markdown('<div class="section-header">Budget vs Estimate</div>', unsafe_allow_html=True)
-estimate = parse_rm(get(39,1)) or grand_total
-pct = min((grand_total / estimate) * 100, 100) if estimate else 0
-bar_color = "#22c55e" if pct < 85 else "#f59e0b" if pct < 100 else "#ef4444"
-
 for label, val, total, color in [
     ("Flights",       flight_total,    grand_total, "#7c6aff"),
     ("Accommodation", accom_total,     grand_total, "#3b82f6"),
@@ -282,33 +345,32 @@ for label, val, total, color in [
     </div>
     """, unsafe_allow_html=True)
 
-# Calendar View
+# ── Calendar View ──────────────────────────────────────────────
 st.markdown('<div class="section-header">Calendar View</div>', unsafe_allow_html=True)
 
 cal_mode = st.radio("", ["Travel", "Office Leave"], horizontal=True, label_visibility="collapsed")
-
-from datetime import datetime
 
 def parse_day(s):
     try: return int(str(s).strip().split()[0])
     except: return None
 
 stay_map = {}
-for r, color in [(13, "#3b82f6"), (14, "#22c55e")]:
-    city = get(r, 1)
-    cin  = parse_day(get(r, 3))
-    cout = parse_day(get(r, 4))
+accom_colors = ["#3b82f6", "#22c55e"]
+for i, color in enumerate(accom_colors):
+    row = st.session_state.accom.iloc[i]
+    city = row["City"]
+    cin  = parse_day(row["Check In"])
+    cout = parse_day(row["Check Out"])
     if city and cin and cout:
         for d in range(cin, cout):
             stay_map[d] = (city, color)
 
 flight_map = {}
-for r in [5, 6, 7]:  # Australia flights only (KUL-SYD, SYD-MEL, MEL-KUL)
-    d     = parse_day(get(r, 0))
-    route = get(r, 1).replace("\n", " ")
-    fno   = get(r, 5)
+for i in [1, 2, 3]:  # KUL-SYD, SYD-MEL, MEL-KUL
+    row = st.session_state.flights.iloc[i]
+    d = parse_day(row["Date"])
     if d and 6 <= d <= 22:
-        flight_map[d] = (route, fno)
+        flight_map[d] = (row["Destination"], row["Flight No."])
 
 base_dow = datetime(2026, 11, 6).weekday()
 cells_html = ""
@@ -396,7 +458,7 @@ else:
 
 headers_html = "".join(
     "<div style='text-align:center;font-size:10px;color:#444;padding:3px 0;'>" + h + "</div>"
-    for h in ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    for h in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 )
 
 cal_full = (
@@ -408,63 +470,74 @@ cal_full = (
 )
 components.html(cal_full, height=380)
 
-# Tables
+# ── Editable tables ──────────────────────────────────────────────
 st.markdown('<hr style="border:none;border-top:1px solid #1a1a1a;margin:12px 0;">', unsafe_allow_html=True)
+
 with st.expander("Flights"):
-    notes = [get(r,8) for r in [4,5,6,7,8]]
-    flights_df = pd.DataFrame({
-        "Date":        [get(r,0) for r in [4,5,6,7,8]],
-        "Destination": [get(r,1) for r in [4,5,6,7,8]],
-        "Departure":   [get(r,2) for r in [4,5,6,7,8]],
-        "Arrival":     [get(r,3) for r in [4,5,6,7,8]],
-        "Airline":     [get(r,4) for r in [4,5,6,7,8]],
-        "Flight No.":  [get(r,5) for r in [4,5,6,7,8]],
-        "Dep / Arr":   [get(r,6) for r in [4,5,6,7,8]],
-        "Cost":        [get(r,7) for r in [4,5,6,7,8]],
-        "Lounge":      [lounge_url(n) for n in notes],
-    })
-    st.dataframe(flights_df, hide_index=True, use_container_width=True, column_config={
-        "Lounge": st.column_config.LinkColumn("Lounge", display_text="Available", width="small")
-    })
+    edited = st.data_editor(
+        st.session_state.flights, hide_index=True, use_container_width=True, num_rows="fixed",
+        column_config={
+            "Cost (RM)": st.column_config.NumberColumn("Cost (RM)", format="RM %.0f", min_value=0),
+            "Lounge":    st.column_config.LinkColumn("Lounge", display_text="Available"),
+        }
+    )
+    if not edited.equals(st.session_state.flights):
+        st.session_state.flights = edited
+        st.rerun()
 
 with st.expander("Accommodation"):
-    show({
-        "Date":         [get(r,0) for r in [13,14]],
-        "City":         [get(r,1) for r in [13,14]],
-        "Accommodation":[get(r,2) for r in [13,14]],
-        "Check In":     [get(r,3) for r in [13,14]],
-        "Check Out":    [get(r,4) for r in [13,14]],
-        "Nights":       [get(r,5) for r in [13,14]],
-        "Budget/Night": [get(r,6) for r in [13,14]],
-        "Total":        [get(r,7) for r in [13,14]],
-    })
+    edited = st.data_editor(
+        st.session_state.accom, hide_index=True, use_container_width=True, num_rows="fixed",
+        column_config={
+            "Nights":       st.column_config.NumberColumn("Nights", min_value=0, step=1),
+            "Budget/Night": st.column_config.NumberColumn("Budget/Night (RM)", format="RM %.0f", min_value=0),
+            "Total (RM)":   st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
+        }
+    )
+    edited["Total (RM)"] = edited["Nights"].astype(float) * edited["Budget/Night"]
+    if not edited.equals(st.session_state.accom):
+        st.session_state.accom = edited
+        st.rerun()
 
 with st.expander("Food"):
-    show({
-        "Dates":          [get(r,0) for r in [19,20]],
-        "City":           [get(r,1) for r in [19,20]],
-        "Days":           [get(r,2) for r in [19,20]],
-        "Daily Estimate": [get(r,3) for r in [19,20]],
-        "Total":          [get(r,4) for r in [19,20]],
-    })
+    edited = st.data_editor(
+        st.session_state.food, hide_index=True, use_container_width=True, num_rows="fixed",
+        column_config={
+            "Days":            st.column_config.NumberColumn("Days", min_value=0, step=1),
+            "Daily Est. (RM)": st.column_config.NumberColumn("Daily Est. (RM)", format="RM %.0f", min_value=0),
+            "Total (RM)":      st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
+        }
+    )
+    edited["Total (RM)"] = edited["Days"].astype(float) * edited["Daily Est. (RM)"]
+    if not edited.equals(st.session_state.food):
+        st.session_state.food = edited
+        st.rerun()
 
 with st.expander("Transportation"):
-    show({
-        "Dates":          [get(r,0) for r in [25,26]],
-        "City":           [get(r,1) for r in [25,26]],
-        "Days":           [get(r,2) for r in [25,26]],
-        "Daily Estimate": [get(r,3) for r in [25,26]],
-        "Total":          [get(r,4) for r in [25,26]],
-        "Notes":          [get(r,5) for r in [25,26]],
-    })
+    edited = st.data_editor(
+        st.session_state.transport, hide_index=True, use_container_width=True, num_rows="fixed",
+        column_config={
+            "Days":            st.column_config.NumberColumn("Days", min_value=0, step=1),
+            "Daily Est. (RM)": st.column_config.NumberColumn("Daily Est. (RM)", format="RM %.0f", min_value=0),
+            "Total (RM)":      st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
+        }
+    )
+    edited["Total (RM)"] = edited["Days"].astype(float) * edited["Daily Est. (RM)"]
+    if not edited.equals(st.session_state.transport):
+        st.session_state.transport = edited
+        st.rerun()
 
 with st.expander("Utilities & Others"):
-    show({
-        "Item":           [get(r,1) for r in [32,33,34]],
-        "Cost (Two Pax)": [get(r,2) for r in [32,33,34]],
-    })
+    edited = st.data_editor(
+        st.session_state.utilities, hide_index=True, use_container_width=True, num_rows="fixed",
+        column_config={
+            "Cost (RM)": st.column_config.NumberColumn("Cost (RM)", format="RM %.0f", min_value=0),
+        }
+    )
+    if not edited.equals(st.session_state.utilities):
+        st.session_state.utilities = edited
+        st.rerun()
 
 if auto_refresh:
     time.sleep(3)
     st.rerun()
-
