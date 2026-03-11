@@ -404,11 +404,9 @@ cal_full = (
     "<div style='font-family:Inter,sans-serif;background:#111111;border:1px solid #1f1f1f;border-radius:8px;padding:16px;'>"
     "<div style='display:grid;grid-template-columns:repeat(7,1fr);gap:5px;'>"
     + headers_html + cells_html +
-    "</div></div>"
+    "</div>" + legend_html + "</div>"
 )
-components.html(cal_full, height=420)
-
-st.markdown(legend_html, unsafe_allow_html=True)
+components.html(cal_full, height=460)
 
 # Tables
 st.markdown("---")
