@@ -298,7 +298,7 @@ for r, color in [(13, "#3b82f6"), (14, "#22c55e")]:
             stay_map[d] = (city, color)
 
 flight_map = {}
-for r in [4, 5, 6, 7, 8]:
+for r in [5, 6, 7]:  # Australia-relevant flights only (excludes KCH domestic legs)
     d     = parse_day(get(r, 0))
     route = get(r, 1).replace("\n", " ")
     fno   = get(r, 5)
