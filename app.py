@@ -114,6 +114,9 @@ st.markdown("""
 
 #MainMenu, footer, header { visibility: hidden; }
 
+/* Calendar toggle */
+div[data-testid="stRadio"] label p { font-size: 11px !important; }
+
 /* Remove expander border */
 div[data-testid="stExpander"] { border: none !important; box-shadow: none !important; }
 details { border: none !important; box-shadow: none !important; }
