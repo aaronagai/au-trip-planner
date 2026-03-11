@@ -136,7 +136,7 @@ div[data-testid="stSidebar"] { background: #0d0d0d; border-right: 1px solid #1a1
 auto_refresh = st.sidebar.checkbox("Auto-refresh (every 3s)", value=True)
 st.sidebar.markdown("---")
 st.sidebar.markdown('<div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">Sydney & Melbourne</div>', unsafe_allow_html=True)
-st.sidebar.markdown('<div class="label" style="margin-top:12px">Duration</div><div style="color:#fff;font-size:14px;">7 Nov – 20 Nov 2026</div>', unsafe_allow_html=True)
+st.sidebar.markdown('<div class="label" style="margin-top:12px">Duration</div><div style="color:#fff;font-size:14px;">6 Nov – 15 Nov 2026</div>', unsafe_allow_html=True)
 st.sidebar.markdown('<div class="label" style="margin-top:12px">Pax</div><div style="color:#fff;font-size:14px;">Aaron & Andrea</div>', unsafe_allow_html=True)
 
 def parse_rm(val):
@@ -175,13 +175,13 @@ andrea       = parse_rm(get(40,1))
 
 # Page title
 st.markdown('<div class="page-title">Australia Trip Dashboard</div>', unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Sydney & Melbourne · 7 – 20 Nov 2026 · Two Pax</div>', unsafe_allow_html=True)
+st.markdown('<div class="page-sub">Sydney & Melbourne · 6 – 15 Nov 2026 · Two Pax</div>', unsafe_allow_html=True)
 
 # Top KPI row
 kpi_items = [
     ("Grand Total",    rm(grand_total),  "All expenses"),
     ("Flights",        rm(flight_total), "5 segments"),
-    ("Accommodation",  rm(accom_total),  "10 nights"),
+    ("Accommodation",  rm(accom_total),  "8 nights"),
     ("Food",           rm(food_total),   "Both cities"),
     ("Transport",      rm(transport_total), "Both cities"),
     ("Utilities",      rm(act_total),    "Visa, roaming, insurance"),
@@ -302,15 +302,15 @@ for r in [4, 5, 6, 7, 8]:
     d     = parse_day(get(r, 0))
     route = get(r, 1).replace("\n", " ")
     fno   = get(r, 5)
-    if d and 8 <= d <= 19:
+    if d and 6 <= d <= 15:
         flight_map[d] = (route, fno)
 
-base_dow = datetime(2026, 11, 8).weekday()
+base_dow = datetime(2026, 11, 6).weekday()
 cells_html = ""
 for _ in range(base_dow):
     cells_html += '<div></div>'
 
-for day in range(8, 20):
+for day in range(6, 16):
     if day in flight_map:
         bg, border = "#2a1f4a", "#7c6aff"
     elif day in stay_map:
