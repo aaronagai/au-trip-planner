@@ -6,7 +6,7 @@ import time
 
 CSV_PATH = "Melbourne_Sydney_Nov.csv"
 
-st.set_page_config(page_title="🇦🇺 Australia · Nov 2026", layout="wide", page_icon="🇦🇺")
+st.set_page_config(page_title="Australia · Nov 2026", layout="wide", page_icon="🇦🇺")
 
 import streamlit.components.v1 as components
 
