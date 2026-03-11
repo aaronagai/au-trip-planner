@@ -494,9 +494,11 @@ with st.expander("Accommodation"):
             "Total (RM)":   st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
         }
     )
-    edited["Total (RM)"] = edited["Nights"].astype(float) * edited["Budget/Night"]
-    if not edited.equals(st.session_state.accom):
-        st.session_state.accom = edited
+    input_cols = ["Date", "City", "Accommodation", "Check In", "Check Out", "Nights", "Budget/Night"]
+    if not edited[input_cols].equals(st.session_state.accom[input_cols]):
+        upd = edited.copy()
+        upd["Total (RM)"] = upd["Nights"].astype(float) * upd["Budget/Night"]
+        st.session_state.accom = upd
         st.rerun()
 
 with st.expander("Food"):
@@ -508,9 +510,11 @@ with st.expander("Food"):
             "Total (RM)":      st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
         }
     )
-    edited["Total (RM)"] = edited["Days"].astype(float) * edited["Daily Est. (RM)"]
-    if not edited.equals(st.session_state.food):
-        st.session_state.food = edited
+    input_cols = ["Dates", "City", "Days", "Daily Est. (RM)"]
+    if not edited[input_cols].equals(st.session_state.food[input_cols]):
+        upd = edited.copy()
+        upd["Total (RM)"] = upd["Days"].astype(float) * upd["Daily Est. (RM)"]
+        st.session_state.food = upd
         st.rerun()
 
 with st.expander("Transportation"):
@@ -522,9 +526,11 @@ with st.expander("Transportation"):
             "Total (RM)":      st.column_config.NumberColumn("Total (RM)", format="RM %.0f", disabled=True),
         }
     )
-    edited["Total (RM)"] = edited["Days"].astype(float) * edited["Daily Est. (RM)"]
-    if not edited.equals(st.session_state.transport):
-        st.session_state.transport = edited
+    input_cols = ["Dates", "City", "Days", "Daily Est. (RM)", "Notes"]
+    if not edited[input_cols].equals(st.session_state.transport[input_cols]):
+        upd = edited.copy()
+        upd["Total (RM)"] = upd["Days"].astype(float) * upd["Daily Est. (RM)"]
+        st.session_state.transport = upd
         st.rerun()
 
 with st.expander("Utilities & Others"):
