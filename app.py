@@ -406,7 +406,7 @@ cal_full = (
     + headers_html + cells_html +
     "</div>" + legend_html + "</div>"
 )
-components.html(cal_full, height=330)
+components.html(cal_full, height=380)
 
 # Tables
 st.markdown('<hr style="border:none;border-top:1px solid #1a1a1a;margin:12px 0;">', unsafe_allow_html=True)
