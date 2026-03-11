@@ -298,11 +298,11 @@ for r, color in [(13, "#3b82f6"), (14, "#22c55e")]:
             stay_map[d] = (city, color)
 
 flight_map = {}
-for r in [5, 6, 7]:  # Australia-relevant flights only (excludes KCH domestic legs)
+for r in [5, 6, 7, 8]:  # Australia-relevant flights + KUL→KCH return
     d     = parse_day(get(r, 0))
     route = get(r, 1).replace("\n", " ")
     fno   = get(r, 5)
-    if d and 6 <= d <= 15:
+    if d and 6 <= d <= 22:
         flight_map[d] = (route, fno)
 
 base_dow = datetime(2026, 11, 6).weekday()
@@ -310,7 +310,7 @@ cells_html = ""
 for _ in range(base_dow):
     cells_html += '<div></div>'
 
-for day in range(6, 16):
+for day in range(6, 23):
     if day in flight_map:
         bg, border = "#2a1f4a", "#7c6aff"
     elif day in stay_map:
@@ -338,7 +338,7 @@ cal_full = (
     + headers_html + cells_html +
     "</div></div>"
 )
-components.html(cal_full, height=300)
+components.html(cal_full, height=420)
 
 st.markdown("""
 <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
