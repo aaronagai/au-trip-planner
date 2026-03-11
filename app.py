@@ -282,7 +282,7 @@ for label, val, total, color in [
 # Calendar View
 st.markdown('<div class="section-header">Calendar View</div>', unsafe_allow_html=True)
 
-cal_mode = st.radio("", ["✈  Travel", "🏢  Office Leave"], horizontal=True, label_visibility="collapsed")
+cal_mode = st.radio("", ["Travel", "Office Leave"], horizontal=True, label_visibility="collapsed")
 
 from datetime import datetime
 
@@ -312,7 +312,7 @@ cells_html = ""
 for _ in range(base_dow):
     cells_html += '<div></div>'
 
-if cal_mode == "✈  Travel":
+if cal_mode == "Travel":
     for day in range(6, 23):
         if day in flight_map:
             bg, border = "#2a1f4a", "#7c6aff"
@@ -332,28 +332,33 @@ if cal_mode == "✈  Travel":
 <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#2a1f4a;border:1px solid #7c6aff;"></div>
-        <span style="font-size:12px;color:#888;">Flight day</span>
+        <span style="font-size:13px;color:#888;">Flight day</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#0d1a2e;border:1px solid #3b82f6;"></div>
-        <span style="font-size:12px;color:#888;">Sydney</span>
+        <span style="font-size:13px;color:#888;">Sydney</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#0d2010;border:1px solid #22c55e;"></div>
-        <span style="font-size:12px;color:#888;">Melbourne</span>
+        <span style="font-size:13px;color:#888;">Melbourne</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#111111;border:1px solid #1f1f1f;"></div>
-        <span style="font-size:12px;color:#888;">No event</span>
+        <span style="font-size:13px;color:#888;">No event</span>
     </div>
 </div>"""
 else:
     leave_map = {
+        7:  ("#0d2010", "#22c55e"),
+        8:  ("#0d2010", "#22c55e"),
         9:  ("#2a0000", "#ef4444"),
         10: ("#2a1500", "#f59e0b"),
         11: ("#2a1500", "#f59e0b"),
         12: ("#2a1500", "#f59e0b"),
         13: ("#2a1500", "#f59e0b"),
+        14: ("#0d2010", "#22c55e"),
+        15: ("#0d2010", "#22c55e"),
+        16: ("#2a1500", "#f59e0b"),
     }
     for day in range(6, 23):
         if day in leave_map:
@@ -369,16 +374,20 @@ else:
     legend_html = """
 <div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
     <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:12px;height:12px;border-radius:3px;background:#0d2010;border:1px solid #22c55e;"></div>
+        <span style="font-size:13px;color:#888;">Public Holiday</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#2a0000;border:1px solid #ef4444;"></div>
-        <span style="font-size:12px;color:#888;">Public Holiday</span>
+        <span style="font-size:13px;color:#888;">Public Holiday (Special)</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#2a1500;border:1px solid #f59e0b;"></div>
-        <span style="font-size:12px;color:#888;">Office Leave</span>
+        <span style="font-size:13px;color:#888;">Office Leave</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#111111;border:1px solid #1f1f1f;"></div>
-        <span style="font-size:12px;color:#888;">No event</span>
+        <span style="font-size:13px;color:#888;">No event</span>
     </div>
 </div>"""
 
