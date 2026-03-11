@@ -340,6 +340,27 @@ cal_full = (
 )
 components.html(cal_full, height=300)
 
+st.markdown("""
+<div style="display:flex;gap:16px;margin-top:8px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:12px;height:12px;border-radius:3px;background:#2a1f4a;border:1px solid #7c6aff;"></div>
+        <span style="font-size:12px;color:#888;">Flight day</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:12px;height:12px;border-radius:3px;background:#0d1a2e;border:1px solid #3b82f6;"></div>
+        <span style="font-size:12px;color:#888;">Sydney</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:12px;height:12px;border-radius:3px;background:#0d2010;border:1px solid #22c55e;"></div>
+        <span style="font-size:12px;color:#888;">Melbourne</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:12px;height:12px;border-radius:3px;background:#111111;border:1px solid #1f1f1f;"></div>
+        <span style="font-size:12px;color:#888;">No event</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
 # Tables
 st.markdown("---")
 with st.expander("Flights"):
