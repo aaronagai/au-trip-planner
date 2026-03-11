@@ -409,6 +409,7 @@ cal_full = (
 components.html(cal_full, height=300)
 
 # Tables
+st.markdown('<hr style="border:none;border-top:1px solid #1a1a1a;margin:12px 0;">', unsafe_allow_html=True)
 with st.expander("Flights"):
     notes = [get(r,8) for r in [4,5,6,7,8]]
     flights_df = pd.DataFrame({
