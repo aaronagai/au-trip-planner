@@ -378,7 +378,7 @@ else:
 <div style="display:flex;gap:16px;margin-top:20px;flex-wrap:wrap;">
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#0d2010;border:1px solid #22c55e;"></div>
-        <span style="font-size:13px;color:#888;">Public Holiday</span>
+        <span style="font-size:13px;color:#888;">Weekend</span>
     </div>
     <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:12px;height:12px;border-radius:3px;background:#2a0000;border:1px solid #ef4444;"></div>
