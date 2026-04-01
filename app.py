@@ -152,45 +152,45 @@ def load_from_csv():
         except: return 0.0
 
     flights = pd.DataFrame({
-        "Date":        [get(r, 0) for r in [4, 5, 6, 7, 8]],
-        "Destination": [get(r, 1) for r in [4, 5, 6, 7, 8]],
-        "Departure":   [get(r, 2) for r in [4, 5, 6, 7, 8]],
-        "Arrival":     [get(r, 3) for r in [4, 5, 6, 7, 8]],
-        "Airline":     [get(r, 4) for r in [4, 5, 6, 7, 8]],
-        "Flight No.":  [get(r, 5) for r in [4, 5, 6, 7, 8]],
-        "Dep / Arr":   [get(r, 6) for r in [4, 5, 6, 7, 8]],
-        "Cost (RM)":   [get_rm(r, 7) for r in [4, 5, 6, 7, 8]],
-        "Lounge":      [get(r, 8) if get(r, 8).startswith("http") else "" for r in [4, 5, 6, 7, 8]],
+        "Date":        [get(r, 0) for r in [4, 5, 6]],
+        "Destination": [get(r, 1) for r in [4, 5, 6]],
+        "Departure":   [get(r, 2) for r in [4, 5, 6]],
+        "Arrival":     [get(r, 3) for r in [4, 5, 6]],
+        "Airline":     [get(r, 4) for r in [4, 5, 6]],
+        "Flight No.":  [get(r, 5) for r in [4, 5, 6]],
+        "Dep / Arr":   [get(r, 6) for r in [4, 5, 6]],
+        "Cost (RM)":   [get_rm(r, 7) for r in [4, 5, 6]],
+        "Lounge":      [get(r, 8) if get(r, 8).startswith("http") else "" for r in [4, 5, 6]],
     })
 
     accom = pd.DataFrame({
-        "City":          [get(r, 1) for r in [13, 14]],
-        "Accommodation": [get(r, 2) for r in [13, 14]],
-        "Check In":      [get(r, 3) for r in [13, 14]],
-        "Check Out":     [get(r, 4) for r in [13, 14]],
-        "Total (RM)":    [get_rm(r, 7) for r in [13, 14]],
+        "City":          [get(r, 1) for r in [11, 12]],
+        "Accommodation": [get(r, 2) for r in [11, 12]],
+        "Check In":      [get(r, 3) for r in [11, 12]],
+        "Check Out":     [get(r, 4) for r in [11, 12]],
+        "Total (RM)":    [get_rm(r, 7) for r in [11, 12]],
     })
 
     food = pd.DataFrame({
-        "Dates":      [get(r, 0) for r in [19, 20]],
-        "City":       [get(r, 1) for r in [19, 20]],
-        "Total (RM)": [get_rm(r, 4) for r in [19, 20]],
+        "Dates":      [get(r, 0) for r in [17, 18]],
+        "City":       [get(r, 1) for r in [17, 18]],
+        "Total (RM)": [get_rm(r, 4) for r in [17, 18]],
     })
 
     transport = pd.DataFrame({
-        "Dates":      [get(r, 0) for r in [25, 26]],
-        "City":       [get(r, 1) for r in [25, 26]],
-        "Notes":      [get(r, 5) for r in [25, 26]],
-        "Total (RM)": [get_rm(r, 4) for r in [25, 26]],
+        "Dates":      [get(r, 0) for r in [23, 24]],
+        "City":       [get(r, 1) for r in [23, 24]],
+        "Notes":      [get(r, 5) for r in [23, 24]],
+        "Total (RM)": [get_rm(r, 4) for r in [23, 24]],
     })
 
     utilities = pd.DataFrame({
-        "Item":      [get(r, 1) for r in [32, 33, 34]],
-        "Cost (RM)": [get_rm(r, 2) for r in [32, 33, 34]],
+        "Item":      [get(r, 1) for r in [30, 31, 32]],
+        "Cost (RM)": [get_rm(r, 2) for r in [30, 31, 32]],
     })
 
-    aaron  = get_rm(39, 1)
-    andrea = get_rm(40, 1)
+    aaron  = get_rm(37, 1)
+    andrea = get_rm(38, 1)
 
     return flights, accom, food, transport, utilities, aaron, andrea
 
@@ -238,7 +238,7 @@ st.markdown('<div class="page-sub">Sydney & Melbourne · 6 – 15 Nov 2026 · Tw
 # ── Top KPI row ──────────────────────────────────────────────────
 kpi_items = [
     ("Grand Total",   rm(grand_total),      "All expenses"),
-    ("Flights",       rm(flight_total),     "5 segments"),
+    ("Flights",       rm(flight_total),     "3 segments"),
     ("Accommodation", rm(accom_total),      "8 nights"),
     ("Food",          rm(food_total),       "Both cities"),
     ("Transport",     rm(transport_total),  "Both cities"),
@@ -354,7 +354,7 @@ for i, color in enumerate(accom_colors):
             stay_map[d] = (city, color)
 
 flight_map = {}
-for i in [1, 2, 3]:  # KUL-SYD, SYD-MEL, MEL-KUL
+for i in [0, 1, 2]:  # KUL-SYD, SYD-MEL, MEL-KUL
     row = st.session_state.flights.iloc[i]
     d = parse_day(row["Date"])
     if d and 6 <= d <= 22:
