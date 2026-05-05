@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AU Trip · Nov 2026</title>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #090909; color: #fff; padding: 24px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #444; margin-bottom: 4px; }
+    .page-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .page-sub { font-size: 13px; color: #555; margin-bottom: 28px; }
+    .section-header { font-size: 13px; font-weight: 600; color: #888; letter-spacing: 0.05em; text-transform: uppercase; margin: 28px 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid #1a1a1a; }
+    .sub { font-size: 12px; color: #555; margin-top: 2px; }
+
+    .trip-bar { display: flex; gap: 32px; padding: 14px 20px; background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .trip-bar-item { display: flex; flex-direction: column; }
+
+    .kpi-stack { background: #111; border: 1px solid #1f1f1f; border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+    .kpi-item { padding: 16px 24px; }
+    .kpi-item + .kpi-item { border-top: 1px solid #1f1f1f; }
+    .kpi-val { font-size: 18px; font-weight: 700; color: #fff; margin: 2px 0; }
+
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+    .chart-card { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 12px; overflow: hidden; }
+
+    .progress-wrap { margin: 8px 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 4px; }
+    .progress-track { background: #1a1a1a; border-radius: 3px; height: 4px; }
+    .progress-fill { height: 4px; border-radius: 3px; }
+
+    .cal-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+    .cal-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #666; border-radius: 4px; padding: 5px 14px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .cal-btn.active { background: #2a2a2a; border-color: #444; color: #fff; }
+    .cal-container { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 16px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .cal-day-header { text-align: center; font-size: 10px; color: #444; padding: 3px 0; }
+    .cal-cell { border-radius: 6px; padding: 8px 6px; min-height: 48px; display: flex; align-items: flex-end; }
+    .cal-cell-day { font-size: 10px; color: #555; }
+    .cal-legend { display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888; }
+    .legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    hr { border: none; border-top: 1px solid #1a1a1a; margin: 20px 0; }
+    .expander { border-bottom: 1px solid #1a1a1a; }
+    .expander:last-child { border-bottom: none; }
+    .expander-btn { width: 100%; background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 14px 0; font-family: inherit; font-size: 14px; color: #888; text-align: left; }
+    .expander-btn:hover { color: #aaa; }
+    .expander-arrow { font-size: 10px; transition: transform 0.2s; }
+    .expander-body { display: none; padding-bottom: 16px; overflow-x: auto; }
+    .expander.open .expander-body { display: block; }
+    .expander.open .expander-arrow { transform: rotate(180deg); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { text-align: left; padding: 8px 12px; color: #555; font-weight: 500; border-bottom: 1px solid #1a1a1a; white-space: nowrap; }
+    tbody td { padding: 8px 12px; color: #aaa; border-bottom: 1px solid #111; vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+    a { color: #7c6aff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    @media (max-width: 680px) {
+      body { padding: 12px; }
+      .charts-row { grid-template-columns: 1fr; }
+      .page-title { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="trip-bar">
+    <div class="trip-bar-item">
+      <div class="label">Trip</div>
+      <div style="color:#fff;font-size:14px;font-weight:600;">Sydney &amp; Melbourne</div>
+    </div>
+    <div class="trip-bar-item">
+      <div class="label">Duration</div>
+      <div style="color:#fff;font-size:14px;">6 Nov – 15 Nov 2026</div>
+    </div>
+    <div class="trip-bar-item">
+      <div class="label">Pax</div>
+      <div style="color:#fff;font-size:14px;">Aaron &amp; Andrea</div>
+    </div>
+  </div>
+
+  <div class="page-title">Australia Trip Dashboard</div>
+  <div class="page-sub">Sydney &amp; Melbourne · 6 – 15 Nov 2026 · Two Pax</div>
+
+  <div class="kpi-stack">
+    <div class="kpi-item">
+      <div class="label">Grand Total</div>
+      <div class="kpi-val">RM 14,220</div>
+      <div class="sub">All expenses</div>
+    </div>
+    <div class="kpi-item">
+      <div class="label">Flights</div>
+      <div class="kpi-val">RM 8,000</div>
+      <div class="sub">5 segments</div>
+    </div>
+    <div class="kpi-item">
+      <div class="label">Accommodation</div>
+      <div class="kpi-val">RM 4,000</div>
+      <div class="sub">8 nights</div>
+    </div>
+    <div class="kpi-item">
+      <div class="label">Food</div>
+      <div class="kpi-val">RM 1,350</div>
+      <div class="sub">Both cities</div>
+    </div>
+    <div class="kpi-item">
+      <div class="label">Transport</div>
+      <div class="kpi-val">RM 450</div>
+      <div class="sub">Both cities</div>
+    </div>
+    <div class="kpi-item">
+      <div class="label">Utilities</div>
+      <div class="kpi-val">RM 420</div>
+      <div class="sub">Visa, roaming, insurance</div>
+    </div>
+  </div>
+
+  <div class="section-header">Breakdown</div>
+  <div class="charts-row">
+    <div class="chart-card"><div id="chart-donut"></div></div>
+    <div class="chart-card"><div id="chart-bar"></div></div>
+  </div>
+
+  <div class="section-header">Budget vs Estimate</div>
+  <div id="progress-bars"></div>
+
+  <div class="section-header">Calendar View</div>
+  <div class="cal-toggle">
+    <button class="cal-btn active" onclick="switchCal('travel', this)">Travel</button>
+    <button class="cal-btn" onclick="switchCal('leave', this)">Office Leave</button>
+  </div>
+  <div class="cal-container">
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-legend" id="cal-legend"></div>
+  </div>
+
+  <hr>
+  <div class="expanders">
+
+    <div class="expander">
+      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
+        Flights <span class="expander-arrow">▼</span>
+      </button>
+      <div class="expander-body">
+        <table>
+          <thead><tr><th>Date</th><th>Route</th><th>Departure</th><th>Arrival</th><th>Airline</th><th>Flight No.</th><th>Dep / Arr</th><th>Cost</th><th>Lounge</th></tr></thead>
+          <tbody>
+            <tr><td>7 Nov</td><td>KCH → KUL</td><td>Kuching Intl. (KCH)</td><td>Kuala Lumpur Intl. (KUL)</td><td>Malaysia Airlines</td><td>MH xxx</td><td>14:00 / 15:30</td><td>RM 200</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=KCH" target="_blank">Available</a></td></tr>
+            <tr><td>6 Nov</td><td>KUL → SYD</td><td>Kuala Lumpur Intl. (KUL)</td><td>Sydney Kingsford Intl. (SYD)</td><td>Malaysia Airlines</td><td>MH 123</td><td>23:00 / 10:20⁺¹</td><td>RM 3,400</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=KUL" target="_blank">Available</a></td></tr>
+            <tr><td>10 Nov</td><td>SYD → MEL</td><td>Sydney Kingsford Intl. (SYD)</td><td>Melbourne Tullamarine Intl. (MEL)</td><td>Qantas Airways</td><td>QF 439</td><td>11:45 / 13:20</td><td>RM 1,000</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=SYD" target="_blank">Available</a></td></tr>
+            <tr><td>15 Nov</td><td>MEL → KUL</td><td>Melbourne Tullamarine Intl. (MEL)</td><td>Kuala Lumpur Intl. (KUL)</td><td>Malaysia Airlines</td><td>MH 148</td><td>15:10 / 20:25</td><td>RM 3,200</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=MEL" target="_blank">Available</a></td></tr>
+            <tr><td>20 Nov</td><td>KUL → KCH</td><td>Kuala Lumpur Intl. (KUL)</td><td>Kuching Intl. (KCH)</td><td>Malaysia Airlines</td><td>MH xxx</td><td>14:00 / 15:30</td><td>RM 200</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=KUL" target="_blank">Available</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="expander">
+      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
+        Accommodation <span class="expander-arrow">▼</span>
+      </button>
+      <div class="expander-body">
+        <table>
+          <thead><tr><th>Date</th><th>City</th><th>Accommodation</th><th>Check In</th><th>Check Out</th><th>Nights</th><th>Budget/Night</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td>7 Nov</td><td>Sydney</td><td>Coogee</td><td>7 Nov</td><td>10 Nov</td><td>3</td><td>RM 500</td><td>RM 1,500</td></tr>
+            <tr><td>10 Nov</td><td>Melbourne</td><td>Windsor</td><td>10 Nov</td><td>15 Nov</td><td>5</td><td>RM 500</td><td>RM 2,500</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="expander">
+      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
+        Food <span class="expander-arrow">▼</span>
+      </button>
+      <div class="expander-body">
+        <table>
+          <thead><tr><th>Dates</th><th>City</th><th>Days</th><th>Daily Estimate</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td>7 Nov – 10 Nov</td><td>Sydney</td><td>3</td><td>RM 150</td><td>RM 450</td></tr>
+            <tr><td>10 Nov – 15 Nov</td><td>Melbourne</td><td>6</td><td>RM 150</td><td>RM 900</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="expander">
+      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
+        Transportation <span class="expander-arrow">▼</span>
+      </button>
+      <div class="expander-body">
+        <table>
+          <thead><tr><th>Dates</th><th>City</th><th>Days</th><th>Daily Estimate</th><th>Total</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>7 Nov – 10 Nov</td><td>Sydney</td><td>3</td><td>RM 50</td><td>RM 150</td><td></td></tr>
+            <tr><td>10 Nov – 15 Nov</td><td>Melbourne</td><td>6</td><td>RM 50</td><td>RM 300</td><td>Myki &amp; car rental for Great Ocean Road</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="expander">
+      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
+        Utilities &amp; Others <span class="expander-arrow">▼</span>
+      </button>
+      <div class="expander-body">
+        <table>
+          <thead><tr><th>Item</th><th>Cost (Two Pax)</th></tr></thead>
+          <tbody>
+            <tr><td>Visa: Subclass 601 ETA</td><td>RM 120</td></tr>
+            <tr><td>Data Roaming</td><td>RM 100</td></tr>
+            <tr><td>Travel Insurance</td><td>RM 200</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DATA = {
+  categories: ['Flights', 'Accommodation', 'Food', 'Transport', 'Utilities'],
+  values:     [8000,       4000,             1350,   450,         420],
+  colors:     ['#7c6aff',  '#3b82f6',        '#22c55e', '#f59e0b', '#ec4899'],
+  grandTotal: 14220,
+  aaron:      13400,
+  andrea:     2620
+};
+
+// Donut chart
+Plotly.newPlot('chart-donut', [{
+  type: 'pie',
+  labels: DATA.categories,
+  values: DATA.values,
+  hole: 0.65,
+  marker: { colors: DATA.colors, line: { color: '#090909', width: 2 } },
+  textinfo: 'none',
+  hovertemplate: '<b>%{label}</b><br>RM %{value:,.0f}<br>%{percent}<extra></extra>'
+}], {
+  paper_bgcolor: '#111111', plot_bgcolor: '#111111',
+  margin: { t: 30, b: 20, l: 20, r: 20 },
+  legend: { font: { color: '#888', size: 12 }, bgcolor: 'rgba(0,0,0,0)' },
+  height: 280,
+  title: { text: 'Expense Distribution', font: { color: '#666', size: 12 }, x: 0.02 },
+  annotations: [{ text: '<b>RM 14,220</b>', x: 0.5, y: 0.5, font: { size: 16, color: 'white' }, showarrow: false }]
+}, { displayModeBar: false, responsive: true });
+
+// Contribution bar
+Plotly.newPlot('chart-bar', [
+  { type: 'bar', name: 'Aaron',  y: ['Contribution'], x: [DATA.aaron],  orientation: 'h', marker: { color: '#7c6aff' }, width: 0.3 },
+  { type: 'bar', name: 'Andrea', y: ['Contribution'], x: [DATA.andrea], orientation: 'h', marker: { color: '#ec4899' }, width: 0.3 }
+], {
+  paper_bgcolor: '#111111', plot_bgcolor: '#111111',
+  margin: { t: 40, b: 20, l: 60, r: 20 },
+  barmode: 'stack',
+  xaxis: { showgrid: true, gridcolor: '#1a1a1a', tickfont: { color: '#555', size: 11 }, linecolor: '#1a1a1a' },
+  yaxis: { showgrid: false, tickfont: { color: '#888', size: 12 }, linecolor: '#1a1a1a' },
+  height: 180,
+  title: { text: 'Aaron <> Andrea Contribution', font: { color: '#666', size: 12 }, x: 0.02 },
+  legend: { font: { color: '#888', size: 12 }, bgcolor: 'rgba(0,0,0,0)' }
+}, { displayModeBar: false, responsive: true });
+
+// Progress bars
+(function () {
+  const el = document.getElementById('progress-bars');
+  DATA.categories.forEach((cat, i) => {
+    const val = DATA.values[i];
+    const pct = Math.round((val / DATA.grandTotal) * 100);
+    el.innerHTML += `
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>${cat}</span>
+          <span style="color:#fff">RM ${val.toLocaleString()} <span style="color:#444">(${pct}%)</span></span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%;background:${DATA.colors[i]}"></div>
+        </div>
+      </div>`;
+  });
+})();
+
+// Calendar
+// Nov 6, 2026 = Friday → offset 4 (Mon=0 … Sun=6)
+const BASE_DOW = 4;
+const DAYS = Array.from({ length: 17 }, (_, i) => i + 6); // 6–22
+
+const CAL_MODES = {
+  travel: {
+    cellStyle(day) {
+      if ([6, 10, 15].includes(day))              return { bg: '#2a1f4a', border: '#7c6aff' };
+      if ([7, 8, 9].includes(day))                return { bg: '#0d1a2e', border: '#3b82f6' };
+      if ([10, 11, 12, 13, 14].includes(day))     return { bg: '#0d2010', border: '#22c55e' };
+      return { bg: '#111111', border: '#1f1f1f' };
+    },
+    legend: [
+      { bg: '#2a1f4a', border: '#7c6aff', label: 'Flight day' },
+      { bg: '#0d1a2e', border: '#3b82f6', label: 'Sydney' },
+      { bg: '#0d2010', border: '#22c55e', label: 'Melbourne' },
+      { bg: '#111111', border: '#1f1f1f', label: 'No event' }
+    ]
+  },
+  leave: {
+    map: { 7: ['#0d2010','#22c55e'], 8: ['#0d2010','#22c55e'], 9: ['#2a0000','#ef4444'], 10: ['#2a1500','#f59e0b'], 11: ['#2a1500','#f59e0b'], 12: ['#2a1500','#f59e0b'], 13: ['#2a1500','#f59e0b'], 14: ['#0d2010','#22c55e'], 15: ['#0d2010','#22c55e'], 16: ['#2a1500','#f59e0b'] },
+    cellStyle(day) {
+      const c = this.map[day];
+      return c ? { bg: c[0], border: c[1] } : { bg: '#111111', border: '#1f1f1f' };
+    },
+    legend: [
+      { bg: '#0d2010', border: '#22c55e', label: 'Public Holiday' },
+      { bg: '#2a0000', border: '#ef4444', label: 'Public Holiday (Special)' },
+      { bg: '#2a1500', border: '#f59e0b', label: 'Office Leave' },
+      { bg: '#111111', border: '#1f1f1f', label: 'No event' }
+    ]
+  }
+};
+
+function renderCal(mode) {
+  const cfg = CAL_MODES[mode];
+  let html = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(h => `<div class="cal-day-header">${h}</div>`).join('');
+  for (let i = 0; i < BASE_DOW; i++) html += '<div></div>';
+  DAYS.forEach(day => {
+    const { bg, border } = cfg.cellStyle(day);
+    html += `<div class="cal-cell" style="background:${bg};border:1px solid ${border};"><div class="cal-cell-day">${day}</div></div>`;
+  });
+  document.getElementById('cal-grid').innerHTML = html;
+  document.getElementById('cal-legend').innerHTML = cfg.legend.map(({ bg, border, label }) =>
+    `<div class="legend-item"><div class="legend-swatch" style="background:${bg};border:1px solid ${border};"></div><span>${label}</span></div>`
+  ).join('');
+}
+
+function switchCal(mode, btn) {
+  document.querySelectorAll('.cal-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCal(mode);
+}
+
+renderCal('travel');
+</script>
+</body>
+</html>
