@@ -233,7 +233,8 @@ const DATA = {
   values:     [2252,       4000,             1350,   450,         420],
   colors:     ['#7c6aff',  '#3b82f6',        '#22c55e', '#f59e0b', '#ec4899'],
   grandTotal: 8472,
-  aaron:      6702
+  aaron:      6702,
+  andrea:     1770
 };
 
 // Donut chart
@@ -254,16 +255,18 @@ Plotly.newPlot('chart-donut', [{
   annotations: [{ text: '<b>MYR 8,472</b>', x: 0.5, y: 0.5, font: { size: 16, color: 'white' }, showarrow: false }]
 }, { displayModeBar: false, responsive: true });
 
-// Budget bar
+// Contribution bar
 Plotly.newPlot('chart-bar', [
-  { type: 'bar', name: 'Aaron', y: ['Budget'], x: [DATA.aaron], orientation: 'h', marker: { color: '#7c6aff' }, width: 0.3 }
+  { type: 'bar', name: 'Aaron',  y: ['Contribution'], x: [DATA.aaron],  orientation: 'h', marker: { color: '#7c6aff' }, width: 0.3 },
+  { type: 'bar', name: 'Andrea', y: ['Contribution'], x: [DATA.andrea], orientation: 'h', marker: { color: '#ec4899' }, width: 0.3 }
 ], {
   paper_bgcolor: '#111111', plot_bgcolor: '#111111',
   margin: { t: 40, b: 20, l: 60, r: 20 },
+  barmode: 'stack',
   xaxis: { showgrid: true, gridcolor: '#1a1a1a', tickfont: { color: '#555', size: 11 }, linecolor: '#1a1a1a' },
   yaxis: { showgrid: false, tickfont: { color: '#888', size: 12 }, linecolor: '#1a1a1a' },
   height: 180,
-  title: { text: 'Budget Allocation', font: { color: '#666', size: 12 }, x: 0.02 },
+  title: { text: 'Aaron &lt;&gt; Andrea Contribution', font: { color: '#666', size: 12 }, x: 0.02 },
   legend: { font: { color: '#888', size: 12 }, bgcolor: 'rgba(0,0,0,0)' }
 }, { displayModeBar: false, responsive: true });
 
