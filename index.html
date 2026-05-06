@@ -63,6 +63,10 @@
     a { color: #7c6aff; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
+    #loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; font-size: 13px; color: #555; }
+    #error { display: none; padding: 20px; color: #ef4444; font-size: 13px; text-align: center; }
+    #app { display: none; }
+
     @media (max-width: 680px) {
       body { padding: 12px; }
       .charts-row { grid-template-columns: 1fr; }
@@ -71,286 +75,365 @@
   </style>
 </head>
 <body>
-<div class="container">
 
-  <div class="trip-bar">
-    <div class="trip-bar-item">
-      <div class="label">Trip</div>
-      <div style="color:#fff;font-size:14px;font-weight:600;">Sydney &amp; Melbourne</div>
-    </div>
-    <div class="trip-bar-item">
-      <div class="label">Duration</div>
-      <div style="color:#fff;font-size:14px;">6 Nov – 15 Nov 2026</div>
-    </div>
-    <div class="trip-bar-item">
-      <div class="label">Pax</div>
-      <div style="color:#fff;font-size:14px;">Aaron &amp; Andrea</div>
-    </div>
-  </div>
+<div id="loading">Loading trip data…</div>
+<div id="error">Failed to load sheet. Make sure it is published to the web.<br><small style="color:#555">File → Share → Publish to web → CSV → Publish</small></div>
 
+<div class="container" id="app">
+  <div class="trip-bar" id="trip-bar"></div>
   <div class="page-title">Australia Trip Dashboard</div>
-  <div class="page-sub">Sydney &amp; Melbourne · 6 – 15 Nov 2026 · Two Pax</div>
-
-  <div class="kpi-stack">
-    <div class="kpi-item">
-      <div class="label">Grand Total</div>
-      <div class="kpi-val">MYR 8,472</div>
-      <div class="sub">All expenses</div>
-    </div>
-    <div class="kpi-item">
-      <div class="label">Flights</div>
-      <div class="kpi-val">MYR 2,252</div>
-      <div class="sub">5 segments</div>
-    </div>
-    <div class="kpi-item">
-      <div class="label">Accommodation</div>
-      <div class="kpi-val">MYR 4,000</div>
-      <div class="sub">8 nights</div>
-    </div>
-    <div class="kpi-item">
-      <div class="label">Food</div>
-      <div class="kpi-val">MYR 1,350</div>
-      <div class="sub">Both cities</div>
-    </div>
-    <div class="kpi-item">
-      <div class="label">Transport</div>
-      <div class="kpi-val">MYR 450</div>
-      <div class="sub">Both cities</div>
-    </div>
-    <div class="kpi-item">
-      <div class="label">Utilities</div>
-      <div class="kpi-val">MYR 420</div>
-      <div class="sub">Visa, roaming, insurance</div>
-    </div>
-  </div>
-
+  <div class="page-sub" id="page-sub"></div>
+  <div class="kpi-stack" id="kpi-stack"></div>
   <div class="section-header">Breakdown</div>
   <div class="charts-row">
     <div class="chart-card"><div id="chart-donut"></div></div>
     <div class="chart-card"><div id="chart-bar"></div></div>
   </div>
-
   <div class="section-header">Budget vs Estimate</div>
   <div id="progress-bars"></div>
-
   <div class="section-header">Calendar View</div>
   <div class="cal-toggle">
-    <button class="cal-btn active" onclick="switchCal('travel', this)">Travel</button>
-    <button class="cal-btn" onclick="switchCal('leave', this)">Office Leave</button>
+    <button class="cal-btn active" onclick="switchCal('travel',this)">Travel</button>
+    <button class="cal-btn" onclick="switchCal('leave',this)">Office Leave</button>
   </div>
   <div class="cal-container">
     <div class="cal-grid" id="cal-grid"></div>
     <div class="cal-legend" id="cal-legend"></div>
   </div>
-
   <hr>
-  <div class="expanders">
-
-    <div class="expander">
-      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
-        Flights <span class="expander-arrow">▼</span>
-      </button>
-      <div class="expander-body">
-        <table>
-          <thead><tr><th>Date</th><th>Route</th><th>Departure</th><th>Arrival</th><th>Airline</th><th>Flight No.</th><th>Dep / Arr</th><th>Cost</th><th>Lounge</th></tr></thead>
-          <tbody>
-            <tr><td>5 Nov</td><td>KCH → KUL</td><td>Kuching Intl. (KCH)</td><td>Kuala Lumpur Intl. (KUL)</td><td>Malaysia Airlines</td><td>MH xxx</td><td>14:00 / 15:30</td><td>MYR 0</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=KCH" target="_blank">Available</a></td></tr>
-            <tr><td>6 Nov</td><td>KUL → SYD</td><td>Kuala Lumpur Intl. (KUL)</td><td>Sydney Kingsford Intl. (SYD)</td><td>Malaysia Airlines</td><td>MH 123</td><td>23:00 / 10:20⁺¹</td><td>MYR 614</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=KUL" target="_blank">Available</a></td></tr>
-            <tr><td>10 Nov</td><td>SYD → MEL</td><td>Sydney Kingsford Intl. (SYD)</td><td>Melbourne Tullamarine Intl. (MEL)</td><td>Qantas Airways</td><td>QF 439</td><td>11:45 / 13:20</td><td>MYR 738</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=SYD" target="_blank">Available</a></td></tr>
-            <tr><td>15 Nov</td><td>MEL → KUL</td><td>Melbourne Tullamarine Intl. (MEL)</td><td>Kuala Lumpur Intl. (KUL)</td><td>Malaysia Airlines</td><td>MH 148</td><td>15:10 / 20:25</td><td>MYR 900</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=MEL" target="_blank">Available</a></td></tr>
-            <tr><td>16 Nov</td><td>KUL → KCH</td><td>Kuala Lumpur Intl. (KUL)</td><td>Kuching Intl. (KCH)</td><td>Malaysia Airlines</td><td>MH xxx</td><td>14:00 / 15:30</td><td>MYR 0</td><td><a href="https://www.oneworld.com/airport-lounge-results?location=KUL" target="_blank">Available</a></td></tr>
-          </tbody>
-          <tfoot><tr><td colspan="7"></td><td>MYR 2,252</td><td></td></tr></tfoot>
-        </table>
-      </div>
-    </div>
-
-    <div class="expander">
-      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
-        Accommodation <span class="expander-arrow">▼</span>
-      </button>
-      <div class="expander-body">
-        <table>
-          <thead><tr><th>Date</th><th>City</th><th>Accommodation</th><th>Check In</th><th>Check Out</th><th>Nights</th><th>Budget/Night</th><th>Total</th></tr></thead>
-          <tbody>
-            <tr><td>7 Nov</td><td>Sydney</td><td>Coogee</td><td>7 Nov</td><td>10 Nov</td><td>3</td><td>MYR 500</td><td>MYR 1,500</td></tr>
-            <tr><td>10 Nov</td><td>Melbourne</td><td>Windsor</td><td>10 Nov</td><td>15 Nov</td><td>5</td><td>MYR 500</td><td>MYR 2,500</td></tr>
-          </tbody>
-          <tfoot><tr><td colspan="7"></td><td>MYR 4,000</td></tr></tfoot>
-        </table>
-      </div>
-    </div>
-
-    <div class="expander">
-      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
-        Food <span class="expander-arrow">▼</span>
-      </button>
-      <div class="expander-body">
-        <table>
-          <thead><tr><th>Dates</th><th>City</th><th>Days</th><th>Daily Estimate</th><th>Total</th></tr></thead>
-          <tbody>
-            <tr><td>7 Nov – 10 Nov</td><td>Sydney</td><td>3</td><td>MYR 150</td><td>MYR 450</td></tr>
-            <tr><td>10 Nov – 15 Nov</td><td>Melbourne</td><td>6</td><td>MYR 150</td><td>MYR 900</td></tr>
-          </tbody>
-          <tfoot><tr><td colspan="4"></td><td>MYR 1,350</td></tr></tfoot>
-        </table>
-      </div>
-    </div>
-
-    <div class="expander">
-      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
-        Transportation <span class="expander-arrow">▼</span>
-      </button>
-      <div class="expander-body">
-        <table>
-          <thead><tr><th>Dates</th><th>City</th><th>Days</th><th>Daily Estimate</th><th>Total</th><th>Notes</th></tr></thead>
-          <tbody>
-            <tr><td>7 Nov – 10 Nov</td><td>Sydney</td><td>3</td><td>MYR 50</td><td>MYR 150</td><td></td></tr>
-            <tr><td>10 Nov – 15 Nov</td><td>Melbourne</td><td>6</td><td>MYR 50</td><td>MYR 300</td><td>Myki &amp; car rental for Great Ocean Road</td></tr>
-          </tbody>
-          <tfoot><tr><td colspan="4"></td><td>MYR 450</td><td></td></tr></tfoot>
-        </table>
-      </div>
-    </div>
-
-    <div class="expander">
-      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
-        Utilities &amp; Others <span class="expander-arrow">▼</span>
-      </button>
-      <div class="expander-body">
-        <table>
-          <thead><tr><th>Item</th><th>Cost (Two Pax)</th></tr></thead>
-          <tbody>
-            <tr><td>Visa: Subclass 601 ETA</td><td>MYR 120</td></tr>
-            <tr><td>Data Roaming</td><td>MYR 100</td></tr>
-            <tr><td>Travel Insurance</td><td>MYR 200</td></tr>
-          </tbody>
-          <tfoot><tr><td>Total</td><td>MYR 420</td></tr></tfoot>
-        </table>
-      </div>
-    </div>
-
-  </div>
+  <div id="tables"></div>
 </div>
 
 <script>
-const DATA = {
-  categories: ['Flights', 'Accommodation', 'Food', 'Transport', 'Utilities'],
-  values:     [2252,       4000,             1350,   450,         420],
-  colors:     ['#7c6aff',  '#3b82f6',        '#22c55e', '#f59e0b', '#ec4899'],
-  grandTotal: 8472,
-  aaron:      6702,
-  andrea:     1770
-};
+const SHEET_ID = '1gyNpebYNfYJdqOYmgcamOuWquUk6sqhJ6Dbfo7dBLf0';
+const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+const COLORS   = ['#7c6aff','#3b82f6','#22c55e','#f59e0b','#ec4899'];
+const CATS     = ['Flights','Accommodation','Food','Transport','Utilities'];
 
-// Donut chart
-Plotly.newPlot('chart-donut', [{
-  type: 'pie',
-  labels: DATA.categories,
-  values: DATA.values,
-  hole: 0.65,
-  marker: { colors: DATA.colors, line: { color: '#090909', width: 2 } },
-  textinfo: 'none',
-  hovertemplate: '<b>%{label}</b><br>MYR %{value:,.0f}<br>%{percent}<extra></extra>'
-}], {
-  paper_bgcolor: '#111111', plot_bgcolor: '#111111',
-  margin: { t: 30, b: 20, l: 20, r: 20 },
-  legend: { font: { color: '#888', size: 12 }, bgcolor: 'rgba(0,0,0,0)' },
-  height: 280,
-  title: { text: 'Expense Distribution', font: { color: '#666', size: 12 }, x: 0.02 },
-  annotations: [{ text: '<b>MYR 8,472</b>', x: 0.5, y: 0.5, font: { size: 16, color: 'white' }, showarrow: false }]
-}, { displayModeBar: false, responsive: true });
+let calData = null;
 
-// Contribution bar
-Plotly.newPlot('chart-bar', [
-  { type: 'bar', name: 'Aaron',  y: ['Contribution'], x: [DATA.aaron],  orientation: 'h', marker: { color: '#7c6aff' }, width: 0.3 },
-  { type: 'bar', name: 'Andrea', y: ['Contribution'], x: [DATA.andrea], orientation: 'h', marker: { color: '#ec4899' }, width: 0.3 }
-], {
-  paper_bgcolor: '#111111', plot_bgcolor: '#111111',
-  margin: { t: 40, b: 20, l: 60, r: 20 },
-  barmode: 'stack',
-  xaxis: { showgrid: true, gridcolor: '#1a1a1a', tickfont: { color: '#555', size: 11 }, linecolor: '#1a1a1a' },
-  yaxis: { showgrid: false, tickfont: { color: '#888', size: 12 }, linecolor: '#1a1a1a' },
-  height: 180,
-  title: { text: 'Aaron &lt;&gt; Andrea Contribution', font: { color: '#666', size: 12 }, x: 0.02 },
-  legend: { font: { color: '#888', size: 12 }, bgcolor: 'rgba(0,0,0,0)' }
-}, { displayModeBar: false, responsive: true });
-
-// Progress bars
-(function () {
-  const el = document.getElementById('progress-bars');
-  DATA.categories.forEach((cat, i) => {
-    const val = DATA.values[i];
-    const pct = Math.round((val / DATA.grandTotal) * 100);
-    el.innerHTML += `
-      <div class="progress-wrap">
-        <div class="progress-label">
-          <span>${cat}</span>
-          <span style="color:#fff">MYR ${val.toLocaleString()} <span style="color:#444">(${pct}%)</span></span>
-        </div>
-        <div class="progress-track">
-          <div class="progress-fill" style="width:${pct}%;background:${DATA.colors[i]}"></div>
-        </div>
-      </div>`;
-  });
-})();
-
-// Calendar
-// Nov 5, 2026 = Thursday → offset 3 (Mon=0 … Sun=6)
-const BASE_DOW = 3;
-const DAYS = Array.from({ length: 18 }, (_, i) => i + 5); // 5–22
-
-const CAL_MODES = {
-  travel: {
-    cellStyle(day) {
-      if ([5, 6, 10, 15, 16].includes(day))       return { bg: '#2a1f4a', border: '#7c6aff' };
-      if ([7, 8, 9].includes(day))                return { bg: '#0d1a2e', border: '#3b82f6' };
-      if ([11, 12, 13, 14].includes(day))         return { bg: '#0d2010', border: '#22c55e' };
-      return { bg: '#111111', border: '#1f1f1f' };
-    },
-    legend: [
-      { bg: '#2a1f4a', border: '#7c6aff', label: 'Flight day' },
-      { bg: '#0d1a2e', border: '#3b82f6', label: 'Sydney' },
-      { bg: '#0d2010', border: '#22c55e', label: 'Melbourne' },
-      { bg: '#111111', border: '#1f1f1f', label: 'No event' }
-    ]
-  },
-  leave: {
-    map: { 7: ['#0d2010','#22c55e'], 8: ['#0d2010','#22c55e'], 9: ['#2a0000','#ef4444'], 10: ['#2a1500','#f59e0b'], 11: ['#2a1500','#f59e0b'], 12: ['#2a1500','#f59e0b'], 13: ['#2a1500','#f59e0b'], 14: ['#0d2010','#22c55e'], 15: ['#0d2010','#22c55e'], 16: ['#2a1500','#f59e0b'] },
-    cellStyle(day) {
-      const c = this.map[day];
-      return c ? { bg: c[0], border: c[1] } : { bg: '#111111', border: '#1f1f1f' };
-    },
-    legend: [
-      { bg: '#0d2010', border: '#22c55e', label: 'Public Holiday' },
-      { bg: '#2a0000', border: '#ef4444', label: 'Public Holiday (Special)' },
-      { bg: '#2a1500', border: '#f59e0b', label: 'Office Leave' },
-      { bg: '#111111', border: '#1f1f1f', label: 'No event' }
-    ]
+// ── CSV parser ───────────────────────────────────────────────────
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQ = false;
+  for (let i = 0; i <= text.length; i++) {
+    const c = text[i];
+    if (i === text.length) {
+      row.push(field.trim());
+      if (row.some(f => f)) rows.push(row);
+      break;
+    }
+    if (inQ) {
+      if (c === '"' && text[i+1] === '"') { field += '"'; i++; }
+      else if (c === '"') inQ = false;
+      else field += c;
+    } else if (c === '"') {
+      inQ = true;
+    } else if (c === ',') {
+      row.push(field.trim()); field = '';
+    } else if (c === '\n' || c === '\r') {
+      row.push(field.trim()); field = '';
+      if (row.some(f => f)) rows.push(row);
+      row = [];
+      if (c === '\r' && text[i+1] === '\n') i++;
+    } else {
+      field += c;
+    }
   }
+  return rows;
+}
+
+// ── Section splitter ─────────────────────────────────────────────
+function parseSections(rows) {
+  const KNOWN = new Set(['TRIP INFO','FLIGHTS','ACCOMMODATION','FOOD','TRANSPORT','UTILITIES','BUDGET']);
+  const out = {};
+  let cur = null;
+  for (const row of rows) {
+    const k = (row[0] || '').trim().toUpperCase();
+    if (KNOWN.has(k)) { cur = k; out[cur] = []; }
+    else if (cur) out[cur].push(row);
+  }
+  return out;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
+function parseMYR(s) {
+  return parseFloat((s || '').replace(/[^0-9.]/g, '')) || 0;
+}
+function fmtMYR(v) {
+  return 'MYR ' + Math.round(v).toLocaleString();
+}
+function extractDay(s) {
+  const m = (s || '').match(/^(\d+)/);
+  return m ? parseInt(m[1]) : null;
+}
+// Nov 1 2026 = Sunday = weekday 6 (Mon=0)
+function novDow(day) { return (6 + day - 1) % 7; }
+
+// Parse a table section: returns { headers, data, total }
+function parseTable(rows) {
+  const hi = rows.findIndex(r => r.some(c => c));
+  if (hi < 0) return { headers: [], data: [], total: null };
+  const headers = rows[hi].map(c => c.trim());
+  const data = []; let total = null;
+  for (let i = hi + 1; i < rows.length; i++) {
+    const row = rows[i];
+    const ti = row.findIndex(c => (c||'').trim().toLowerCase() === 'total');
+    if (ti >= 0) {
+      for (let j = ti + 1; j < row.length; j++) {
+        if (row[j]?.trim()) { total = row[j].trim(); break; }
+      }
+    } else if (row.some(c => c)) {
+      data.push(row);
+    }
+  }
+  return { headers, data, total };
+}
+
+// Parse TRIP INFO key-value rows
+function parseTripInfo(rows) {
+  const info = {};
+  for (const r of rows) {
+    const k = (r[0]||'').trim();
+    if (k) info[k] = (r[1]||'').trim();
+  }
+  return info;
+}
+
+// Parse BUDGET key-value rows
+function parseBudget(rows) {
+  const b = {};
+  for (const r of rows) {
+    const k = (r[0]||'').trim();
+    if (k && k.toLowerCase() !== 'total') b[k] = parseMYR(r[1]);
+  }
+  return b;
+}
+
+// ── Main render ──────────────────────────────────────────────────
+function render(sections) {
+  const info      = parseTripInfo(sections['TRIP INFO']    || []);
+  const flights   = parseTable(sections['FLIGHTS']         || []);
+  const accom     = parseTable(sections['ACCOMMODATION']   || []);
+  const food      = parseTable(sections['FOOD']            || []);
+  const transport = parseTable(sections['TRANSPORT']       || []);
+  const utils     = parseTable(sections['UTILITIES']       || []);
+  const budget    = parseBudget(sections['BUDGET']         || []);
+
+  const totals = [
+    parseMYR(flights.total),
+    parseMYR(accom.total),
+    parseMYR(food.total),
+    parseMYR(transport.total),
+    parseMYR(utils.total),
+  ];
+  const grand = totals.reduce((a, b) => a + b, 0);
+
+  // Trip bar
+  document.getElementById('trip-bar').innerHTML = `
+    <div class="trip-bar-item"><div class="label">Trip</div><div style="color:#fff;font-size:14px;font-weight:600;">${info.Title||''}</div></div>
+    <div class="trip-bar-item"><div class="label">Duration</div><div style="color:#fff;font-size:14px;">${info.Dates||''}</div></div>
+    <div class="trip-bar-item"><div class="label">Pax</div><div style="color:#fff;font-size:14px;">${info.Pax||''}</div></div>`;
+
+  document.getElementById('page-sub').textContent =
+    `${info.Title||''} · ${info.Dates||''} · ${info.Pax||''}`;
+
+  // KPI
+  const nights = accom.data.reduce((s, r) => s + (parseInt(r[5])||0), 0);
+  const kpis = [
+    ['Grand Total',    fmtMYR(grand),        'All expenses'],
+    ['Flights',        fmtMYR(totals[0]),    `${flights.data.length} segments`],
+    ['Accommodation',  fmtMYR(totals[1]),    `${nights} nights`],
+    ['Food',           fmtMYR(totals[2]),    'Both cities'],
+    ['Transport',      fmtMYR(totals[3]),    'Both cities'],
+    ['Utilities',      fmtMYR(totals[4]),    utils.data.map(r=>r[0]).filter(Boolean).join(', ')||'Misc.'],
+  ];
+  document.getElementById('kpi-stack').innerHTML = kpis.map(([label, val, sub]) =>
+    `<div class="kpi-item"><div class="label">${label}</div><div class="kpi-val">${val}</div><div class="sub">${sub}</div></div>`
+  ).join('');
+
+  // Donut chart
+  Plotly.newPlot('chart-donut', [{
+    type: 'pie', labels: CATS, values: totals, hole: 0.65,
+    marker: { colors: COLORS, line: { color: '#090909', width: 2 } },
+    textinfo: 'none',
+    hovertemplate: '<b>%{label}</b><br>MYR %{value:,.0f}<br>%{percent}<extra></extra>'
+  }], {
+    paper_bgcolor:'#111111', plot_bgcolor:'#111111',
+    margin:{t:30,b:20,l:20,r:20},
+    legend:{font:{color:'#888',size:12},bgcolor:'rgba(0,0,0,0)'},
+    height:280,
+    title:{text:'Expense Distribution',font:{color:'#666',size:12},x:0.02},
+    annotations:[{text:`<b>${fmtMYR(grand)}</b>`,x:0.5,y:0.5,font:{size:16,color:'white'},showarrow:false}]
+  }, {displayModeBar:false,responsive:true});
+
+  // Contribution bar
+  const barColors = ['#7c6aff','#ec4899','#22c55e','#f59e0b'];
+  Plotly.newPlot('chart-bar',
+    Object.entries(budget).map(([name, val], i) => ({
+      type:'bar', name, y:['Contribution'], x:[val], orientation:'h',
+      marker:{color:barColors[i%barColors.length]}, width:0.3
+    })),
+    {
+      paper_bgcolor:'#111111', plot_bgcolor:'#111111',
+      margin:{t:40,b:20,l:60,r:20}, barmode:'stack',
+      xaxis:{showgrid:true,gridcolor:'#1a1a1a',tickfont:{color:'#555',size:11},linecolor:'#1a1a1a'},
+      yaxis:{showgrid:false,tickfont:{color:'#888',size:12},linecolor:'#1a1a1a'},
+      height:180,
+      title:{text:'Contribution Split',font:{color:'#666',size:12},x:0.02},
+      legend:{font:{color:'#888',size:12},bgcolor:'rgba(0,0,0,0)'}
+    }, {displayModeBar:false,responsive:true});
+
+  // Progress bars
+  document.getElementById('progress-bars').innerHTML = CATS.map((cat, i) => {
+    const pct = grand ? Math.round((totals[i]/grand)*100) : 0;
+    return `<div class="progress-wrap">
+      <div class="progress-label"><span>${cat}</span><span style="color:#fff">${fmtMYR(totals[i])} <span style="color:#444">(${pct}%)</span></span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${COLORS[i]}"></div></div>
+    </div>`;
+  }).join('');
+
+  // Calendar
+  const flightDays = new Set(flights.data.map(r => extractDay(r[0])).filter(Boolean));
+  const cityMap = {};
+  accom.data.forEach(r => {
+    const city = (r[1]||'').trim();
+    const cin  = extractDay(r[3]);
+    const cout = extractDay(r[4]);
+    if (cin && cout) for (let d = cin; d < cout; d++) cityMap[d] = city;
+  });
+  const allDays   = [...flightDays, ...Object.keys(cityMap).map(Number)];
+  const minDay    = allDays.length ? Math.min(...allDays) : 1;
+  const maxDay    = allDays.length ? Math.max(...allDays) : 30;
+  const days      = Array.from({length: maxDay - minDay + 1}, (_, i) => i + minDay);
+  calData = { flightDays, cityMap, days, minDay };
+  renderCal('travel');
+
+  // Tables
+  renderTables([
+    { title: 'Flights',           t: flights   },
+    { title: 'Accommodation',     t: accom     },
+    { title: 'Food',              t: food      },
+    { title: 'Transportation',    t: transport },
+    { title: 'Utilities & Others',t: utils     },
+  ]);
+}
+
+// ── Calendar ─────────────────────────────────────────────────────
+const LEAVE_MAP = {
+  7:['#0d2010','#22c55e'], 8:['#0d2010','#22c55e'], 9:['#2a0000','#ef4444'],
+  10:['#2a1500','#f59e0b'],11:['#2a1500','#f59e0b'],12:['#2a1500','#f59e0b'],
+  13:['#2a1500','#f59e0b'],14:['#0d2010','#22c55e'],15:['#0d2010','#22c55e'],
+  16:['#2a1500','#f59e0b']
 };
 
 function renderCal(mode) {
-  const cfg = CAL_MODES[mode];
-  let html = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(h => `<div class="cal-day-header">${h}</div>`).join('');
-  for (let i = 0; i < BASE_DOW; i++) html += '<div></div>';
-  DAYS.forEach(day => {
-    const { bg, border } = cfg.cellStyle(day);
-    html += `<div class="cal-cell" style="background:${bg};border:1px solid ${border};"><div class="cal-cell-day">${day}</div></div>`;
+  if (!calData) return;
+  const { flightDays, cityMap, days, minDay } = calData;
+  const baseDow = novDow(minDay);
+
+  function style(day) {
+    if (mode === 'travel') {
+      if (flightDays.has(day))                              return ['#2a1f4a','#7c6aff'];
+      const c = (cityMap[day]||'').toLowerCase();
+      if (c.includes('sydney'))                             return ['#0d1a2e','#3b82f6'];
+      if (c.includes('melbourne'))                          return ['#0d2010','#22c55e'];
+      return ['#111111','#1f1f1f'];
+    }
+    return LEAVE_MAP[day] || ['#111111','#1f1f1f'];
+  }
+
+  let html = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+    .map(h=>`<div class="cal-day-header">${h}</div>`).join('');
+  for (let i = 0; i < baseDow; i++) html += '<div></div>';
+  days.forEach(day => {
+    const [bg, border] = style(day);
+    html += `<div class="cal-cell" style="background:${bg};border:1px solid ${border};">
+      <div class="cal-cell-day">${day}</div></div>`;
   });
   document.getElementById('cal-grid').innerHTML = html;
-  document.getElementById('cal-legend').innerHTML = cfg.legend.map(({ bg, border, label }) =>
+
+  const legends = mode === 'travel'
+    ? [['#2a1f4a','#7c6aff','Flight day'],['#0d1a2e','#3b82f6','Sydney'],
+       ['#0d2010','#22c55e','Melbourne'],  ['#111111','#1f1f1f','No event']]
+    : [['#0d2010','#22c55e','Public Holiday'],['#2a0000','#ef4444','Public Holiday (Special)'],
+       ['#2a1500','#f59e0b','Office Leave'],   ['#111111','#1f1f1f','No event']];
+
+  document.getElementById('cal-legend').innerHTML = legends.map(([bg,border,label])=>
     `<div class="legend-item"><div class="legend-swatch" style="background:${bg};border:1px solid ${border};"></div><span>${label}</span></div>`
   ).join('');
 }
 
 function switchCal(mode, btn) {
-  document.querySelectorAll('.cal-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.cal-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   renderCal(mode);
 }
 
-renderCal('travel');
+// ── Tables ───────────────────────────────────────────────────────
+function renderTables(sections) {
+  function makeTable({ headers, data, total }) {
+    if (!data.length) return '<p style="color:#555;font-size:12px;padding:8px 0">No data</p>';
+
+    // Find which column index should show the total
+    function totalColIdx() {
+      let i = headers.findIndex(h => h.toLowerCase() === 'total');
+      if (i < 0) i = headers.findIndex(h => h.toLowerCase() === 'cost');
+      if (i < 0) i = headers.length - 1;
+      return i;
+    }
+
+    const thead = `<thead><tr>${headers.map(h =>
+      `<th>${h === 'Lounge URL' ? 'Lounge' : h}</th>`).join('')}</tr></thead>`;
+
+    const tbody = `<tbody>${data.map(row =>
+      `<tr>${headers.map((h, i) => {
+        const v = (row[i]||'').trim();
+        if (h === 'Lounge URL') return `<td>${v.startsWith('http') ? `<a href="${v}" target="_blank">Available</a>` : ''}</td>`;
+        return `<td>${v}</td>`;
+      }).join('')}</tr>`
+    ).join('')}</tbody>`;
+
+    const tfoot = total ? (() => {
+      const ci = totalColIdx();
+      const cells = headers.map((_, i) => {
+        if (i === 0 && ci > 0) return `<td style="color:#666">Total</td>`;
+        if (i === ci) return `<td>${total}</td>`;
+        return '<td></td>';
+      }).join('');
+      return `<tfoot><tr>${cells}</tr></tfoot>`;
+    })() : '';
+
+    return `<table>${thead}${tbody}${tfoot}</table>`;
+  }
+
+  document.getElementById('tables').innerHTML = sections.map(({ title, t }) => `
+    <div class="expander">
+      <button class="expander-btn" onclick="this.closest('.expander').classList.toggle('open')">
+        ${title} <span class="expander-arrow">▼</span>
+      </button>
+      <div class="expander-body">${makeTable(t)}</div>
+    </div>`).join('');
+}
+
+// ── Fetch & boot ─────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch(`${CSV_URL}&t=${Date.now()}`);
+    if (!res.ok) throw new Error(res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    render(parseSections(rows));
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display     = 'block';
+  } catch (e) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error').style.display   = 'block';
+    console.error('Sheet fetch failed:', e);
+  }
+}
+
+loadData();
 </script>
 </body>
 </html>
