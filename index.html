@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#17130F">
+  <meta name="theme-color" content="#090909">
   <title>Bubs Down Under 2026!</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect fill='%23012169' width='60' height='30'/%3E%3CclipPath id='c'%3E%3Crect width='30' height='15'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23c)'%3E%3Cpath stroke='%23fff' stroke-width='3' d='M0 0l30 15M30 0L0 15'/%3E%3Cpath stroke='%23C8102E' stroke-width='1.5' d='M0 0l30 15M30 0L0 15'/%3E%3Cpath stroke='%23fff' stroke-width='5' d='M15 0v15M0 7.5h30'/%3E%3Cpath stroke='%23C8102E' stroke-width='3' d='M15 0v15M0 7.5h30'/%3E%3C/g%3E%3Cpolygon fill='%23fff' points='12,22 13.2,25.2 16.5,25.2 13.8,27.2 14.8,30.2 12,28.5 9.2,30.2 10.2,27.2 7.5,25.2 10.8,25.2'/%3E%3Ccircle fill='%23fff' cx='45' cy='7' r='1.5'/%3E%3Ccircle fill='%23fff' cx='52' cy='5.5' r='1'/%3E%3Ccircle fill='%23fff' cx='50' cy='11' r='1'/%3E%3Ccircle fill='%23fff' cx='55' cy='9' r='1'/%3E%3Ccircle fill='%23fff' cx='47' cy='17' r='2'/%3E%3C/svg%3E">
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect fill='%23012169' width='60' height='30'/%3E%3CclipPath id='c'%3E%3Crect width='30' height='15'/%3E%3C/clipPath%3E%3Cg clip-path='url(%23c)'%3E%3Cpath stroke='%23fff' stroke-width='3' d='M0 0l30 15M30 0L0 15'/%3E%3Cpath stroke='%23C8102E' stroke-width='1.5' d='M0 0l30 15M30 0L0 15'/%3E%3Cpath stroke='%23fff' stroke-width='5' d='M15 0v15M0 7.5h30'/%3E%3Cpath stroke='%23C8102E' stroke-width='3' d='M15 0v15M0 7.5h30'/%3E%3C/g%3E%3Cpolygon fill='%23fff' points='12,22 13.2,25.2 16.5,25.2 13.8,27.2 14.8,30.2 12,28.5 9.2,30.2 10.2,27.2 7.5,25.2 10.8,25.2'/%3E%3Ccircle fill='%23fff' cx='45' cy='7' r='1.5'/%3E%3Ccircle fill='%23fff' cx='52' cy='5.5' r='1'/%3E%3Ccircle fill='%23fff' cx='50' cy='11' r='1'/%3E%3Ccircle fill='%23fff' cx='55' cy='9' r='1'/%3E%3Ccircle fill='%23fff' cx='47' cy='17' r='2'/%3E%3C/svg%3E">
@@ -22,110 +22,73 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..600&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg:        #17130F;  /* warm ink */
-      --bg-tint:   #1B160F;  /* faint warm panel */
-      --surface:   #211B15;  /* cards */
-      --surface-2: #2A231B;  /* raised */
-      --border:    #322A20;  /* hairlines on surface */
-      --border-soft:#241E17; /* faint dividers */
-      --text:      #F5EFE6;  /* warm white */
-      --text-dim:  #A89C8A;  /* warm gray */
-      --text-faint:#6B6051;  /* labels */
-      --accent:    #E08A4B;  /* outback ochre */
-      --accent-soft:#3A2A1B; /* ochre-tinted bg */
-      --terracotta:#C75D4A;
-      --eucalyptus:#6FB6A3;
-      --harbour:   #5B9BD5;
-      --golden:    #E0A23C;
-      --danger:    #E06B57;
-
-      --pad: clamp(12px, 3vw, 24px);
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { -webkit-text-size-adjust: 100%; }
     body {
-      font-family: 'Geist', system-ui, sans-serif; color: var(--text);
-      background: var(--bg);
-      background-image: radial-gradient(120% 80% at 50% -10%, rgba(224,138,75,0.08), transparent 60%);
-      background-attachment: fixed;
-      padding: var(--pad);
-      padding-left: max(var(--pad), env(safe-area-inset-left));
-      padding-right: max(var(--pad), env(safe-area-inset-right));
+      font-family: 'Inter', sans-serif; background: #090909; color: #fff;
+      padding: clamp(12px, 3vw, 24px);
+      padding-left: max(clamp(12px, 3vw, 24px), env(safe-area-inset-left));
+      padding-right: max(clamp(12px, 3vw, 24px), env(safe-area-inset-right));
       -webkit-font-smoothing: antialiased;
-      font-feature-settings: "ss01", "cv01";
     }
-    .container { max-width: 1140px; margin: 0 auto; width: 100%; }
+    .container { max-width: 1200px; margin: 0 auto; width: 100%; }
 
-    .num { font-family: 'Geist Mono', ui-monospace, monospace; font-feature-settings: "tnum"; letter-spacing: -0.01em; }
+    .label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #444; margin-bottom: 4px; }
+    .page-title { font-size: clamp(18px, 5vw, 22px); font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .page-sub { font-size: 13px; color: #555; margin-bottom: 28px; }
+    .section-header { font-size: 13px; font-weight: 600; color: #888; letter-spacing: 0.05em; text-transform: uppercase; margin: 28px 0 12px 0; padding-bottom: 8px; border-bottom: 1px solid #1a1a1a; }
+    .sub { font-size: 12px; color: #555; margin-top: 2px; }
 
-    .label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 4px; }
-    .page-title { font-family: 'Fraunces', Georgia, serif; font-size: clamp(26px, 6vw, 40px); font-weight: 600; font-optical-sizing: auto; line-height: 1.05; letter-spacing: -0.01em; color: var(--text); margin-bottom: 6px; }
-    .page-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 32px; }
-    .section-header { font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 500; color: var(--text); letter-spacing: 0; text-transform: none; margin: 36px 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid var(--border-soft); }
-    .sub { font-size: 12px; color: var(--text-faint); margin-top: 2px; }
-
-    .kpi-stack { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 16px; }
-    .kpi-item { padding: 18px 24px; transition: background 0.18s ease; }
-    .kpi-item:hover { background: var(--surface-2); }
-    .kpi-item + .kpi-item { border-top: 1px solid var(--border); }
-    .kpi-val { font-family: 'Geist Mono', ui-monospace, monospace; font-feature-settings: "tnum"; font-size: 21px; font-weight: 500; letter-spacing: -0.02em; color: var(--text); margin: 3px 0; }
+    .kpi-stack { background: #111; border: 1px solid #1f1f1f; border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+    .kpi-item { padding: 16px 24px; }
+    .kpi-item + .kpi-item { border-top: 1px solid #1f1f1f; }
+    .kpi-val { font-size: 18px; font-weight: 700; color: #fff; margin: 2px 0; }
 
     .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
-    .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 14px; overflow: hidden; }
+    .chart-card { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 12px; overflow: hidden; }
 
-    .progress-wrap { margin: 12px 0; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-dim); margin-bottom: 6px; }
-    .progress-track { background: var(--surface-2); border-radius: 4px; height: 5px; overflow: hidden; }
-    .progress-fill { height: 5px; border-radius: 4px; transition: width 0.6s cubic-bezier(0.22,1,0.36,1); }
+    .progress-wrap { margin: 8px 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 4px; }
+    .progress-track { background: #1a1a1a; border-radius: 3px; height: 4px; }
+    .progress-fill { height: 4px; border-radius: 3px; }
 
-    .cal-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
-    .cal-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); border-radius: var(--radius-sm); padding: 6px 16px; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; cursor: pointer; font-family: inherit; transition: all 0.15s; }
-    .cal-btn:hover { color: var(--text); border-color: var(--accent); }
-    .cal-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
-    .cal-container { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 18px; }
+    .cal-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+    .cal-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #666; border-radius: 4px; padding: 5px 14px; font-size: 11px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+    .cal-btn.active { background: #2a2a2a; border-color: #444; color: #fff; }
+    .cal-container { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 16px; }
     .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: clamp(3px, 1vw, 5px); }
-    .cal-day-header { text-align: center; font-size: 10px; font-weight: 500; letter-spacing: 0.05em; color: var(--text-faint); padding: 3px 0; }
-    .cal-cell { border-radius: var(--radius-sm); padding: 8px 6px; min-height: clamp(34px, 9vw, 50px); display: flex; align-items: flex-end; transition: transform 0.12s ease; }
-    .cal-cell:hover { transform: translateY(-2px); }
-    .cal-cell-day { font-family: 'Geist Mono', monospace; font-size: 10px; color: var(--text-dim); }
-    .cal-legend { display: flex; gap: 16px; margin-top: 18px; flex-wrap: wrap; }
-    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-dim); }
+    .cal-day-header { text-align: center; font-size: 10px; color: #444; padding: 3px 0; }
+    .cal-cell { border-radius: 6px; padding: 8px 6px; min-height: clamp(34px, 9vw, 48px); display: flex; align-items: flex-end; }
+    .cal-cell-day { font-size: 10px; color: #555; }
+    .cal-legend { display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #888; }
     .legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
-    hr { border: none; border-top: 1px solid var(--border-soft); margin: 24px 0; }
-    .expander { border-bottom: 1px solid var(--border-soft); }
+    hr { border: none; border-top: 1px solid #1a1a1a; margin: 20px 0; }
+    .expander { border-bottom: 1px solid #1a1a1a; }
     .expander:last-child { border-bottom: none; }
-    .expander-btn { width: 100%; background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 15px 0; font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-weight: 500; color: var(--text-dim); text-align: left; transition: color 0.15s; }
-    .expander-btn:hover { color: var(--text); }
-    .expander-arrow { font-size: 10px; font-family: 'Geist', sans-serif; transition: transform 0.2s; }
-    .expander-body { display: none; padding-bottom: 18px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .expander-btn { width: 100%; background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 14px 0; font-family: inherit; font-size: 14px; color: #888; text-align: left; }
+    .expander-btn:hover { color: #aaa; }
+    .expander-arrow { font-size: 10px; transition: transform 0.2s; }
+    .expander-body { display: none; padding-bottom: 16px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .expander-body table { min-width: 420px; }
     .expander.open .expander-body { display: block; }
     .expander.open .expander-arrow { transform: rotate(180deg); }
 
-    table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-    thead th { text-align: left; padding: 9px 12px; color: var(--text-faint); font-weight: 500; letter-spacing: 0.03em; border-bottom: 1px solid var(--border); white-space: nowrap; }
-    tbody td { padding: 9px 12px; color: var(--text-dim); border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th { text-align: left; padding: 8px 12px; color: #555; font-weight: 500; border-bottom: 1px solid #1a1a1a; white-space: nowrap; }
+    tbody td { padding: 8px 12px; color: #aaa; border-bottom: 1px solid #111; vertical-align: top; }
     tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { color: var(--text); }
-    tfoot td { padding: 9px 12px; color: var(--text); font-weight: 600; border-top: 1px solid var(--border); }
-    a { color: var(--accent); text-decoration: none; }
+    tfoot td { padding: 8px 12px; color: #fff; font-weight: 600; border-top: 1px solid #2a2a2a; }
+    a { color: #7c6aff; text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    #loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; font-family: 'Fraunces', Georgia, serif; font-size: 15px; font-style: italic; color: var(--text-faint); }
-    #error { display: none; padding: 20px; color: var(--danger); font-size: 13px; text-align: center; }
+    #loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; font-size: 13px; color: #555; }
+    #error { display: none; padding: 20px; color: #ef4444; font-size: 13px; text-align: center; }
     #app { display: none; }
-    #app.ready { display: block; animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1); }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-    }
+    #app.ready { display: block; }
 
     /* Tablet: stack the two charts */
     @media (max-width: 880px) {
@@ -160,7 +123,7 @@
 <body>
 
 <div id="loading">Loading trip data…</div>
-<div id="error">Failed to load sheet. Make sure it is published to the web.<br><small style="color:var(--text-faint)">File → Share → Publish to web → CSV → Publish</small></div>
+<div id="error">Failed to load sheet. Make sure it is published to the web.<br><small style="color:#555">File → Share → Publish to web → CSV → Publish</small></div>
 
 <div class="container" id="app">
   <div class="page-title">Australia Trip Dashboard</div>
@@ -189,11 +152,8 @@
 <script>
 const SHEET_ID = '1gyNpebYNfYJdqOYmgcamOuWquUk6sqhJ6Dbfo7dBLf0';
 const CSV_URL  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
-const COLORS   = ['#E08A4B','#C75D4A','#6FB6A3','#5B9BD5','#E0A23C'];
+const COLORS   = ['#7c6aff','#3b82f6','#22c55e','#f59e0b','#ec4899'];
 const CATS     = ['Flights','Accommodation','Food','Transport','Utilities'];
-const INK      = '#17130F', SURFACE = '#211B15', GRID = '#322A20';
-const TXT      = '#F5EFE6', TXT_DIM = '#A89C8A', TXT_FAINT = '#6B6051';
-const PLOT_FONT= { family: 'Geist, system-ui, sans-serif' };
 
 let calData = null;
 let chartInputs = null;
@@ -342,7 +302,7 @@ function render(sections) {
   document.getElementById('progress-bars').innerHTML = CATS.map((cat, i) => {
     const pct = grand ? Math.round((totals[i]/grand)*100) : 0;
     return `<div class="progress-wrap">
-      <div class="progress-label"><span>${cat}</span><span class="num" style="color:var(--text)">${fmtMYR(totals[i])} <span style="color:var(--text-faint)">(${pct}%)</span></span></div>
+      <div class="progress-label"><span>${cat}</span><span style="color:#fff">${fmtMYR(totals[i])} <span style="color:#444">(${pct}%)</span></span></div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${COLORS[i]}"></div></div>
     </div>`;
   }).join('');
@@ -374,15 +334,11 @@ function render(sections) {
 }
 
 // ── Calendar ─────────────────────────────────────────────────────
-const CAL_EMPTY = ['#1B160F','#322A20'];
-const CAL_HOLIDAY = ['#15241B','#6FB6A3'];
-const CAL_SPECIAL = ['#2A1512','#E06B57'];
-const CAL_LEAVE   = ['#2A1E10','#E0A23C'];
 const LEAVE_MAP = {
-  7:CAL_HOLIDAY, 8:CAL_HOLIDAY, 9:CAL_SPECIAL,
-  10:CAL_LEAVE,11:CAL_LEAVE,12:CAL_LEAVE,
-  13:CAL_LEAVE,14:CAL_HOLIDAY,15:CAL_HOLIDAY,
-  16:CAL_LEAVE
+  7:['#0d2010','#22c55e'], 8:['#0d2010','#22c55e'], 9:['#2a0000','#ef4444'],
+  10:['#2a1500','#f59e0b'],11:['#2a1500','#f59e0b'],12:['#2a1500','#f59e0b'],
+  13:['#2a1500','#f59e0b'],14:['#0d2010','#22c55e'],15:['#0d2010','#22c55e'],
+  16:['#2a1500','#f59e0b']
 };
 
 function renderCal(mode) {
@@ -392,13 +348,13 @@ function renderCal(mode) {
 
   function style(day) {
     if (mode === 'travel') {
-      if (flightDays.has(day))                              return ['#3A2A1B','#E08A4B'];
+      if (flightDays.has(day))                              return ['#2a1f4a','#7c6aff'];
       const c = (cityMap[day]||'').toLowerCase();
-      if (c.includes('sydney'))                             return ['#13202E','#5B9BD5'];
-      if (c.includes('melbourne'))                          return ['#15241B','#6FB6A3'];
-      return CAL_EMPTY;
+      if (c.includes('sydney'))                             return ['#0d1a2e','#3b82f6'];
+      if (c.includes('melbourne'))                          return ['#0d2010','#22c55e'];
+      return ['#111111','#1f1f1f'];
     }
-    return LEAVE_MAP[day] || CAL_EMPTY;
+    return LEAVE_MAP[day] || ['#111111','#1f1f1f'];
   }
 
   let html = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
@@ -412,10 +368,10 @@ function renderCal(mode) {
   document.getElementById('cal-grid').innerHTML = html;
 
   const legends = mode === 'travel'
-    ? [['#3A2A1B','#E08A4B','Flight day'],['#13202E','#5B9BD5','Sydney'],
-       ['#15241B','#6FB6A3','Melbourne'],  CAL_EMPTY.concat('No event')]
-    : [CAL_HOLIDAY.concat('Public Holiday'), CAL_SPECIAL.concat('Public Holiday (Special)'),
-       CAL_LEAVE.concat('Office Leave'),     CAL_EMPTY.concat('No event')];
+    ? [['#2a1f4a','#7c6aff','Flight day'],['#0d1a2e','#3b82f6','Sydney'],
+       ['#0d2010','#22c55e','Melbourne'],  ['#111111','#1f1f1f','No event']]
+    : [['#0d2010','#22c55e','Public Holiday'],['#2a0000','#ef4444','Public Holiday (Special)'],
+       ['#2a1500','#f59e0b','Office Leave'],   ['#111111','#1f1f1f','No event']];
 
   document.getElementById('cal-legend').innerHTML = legends.map(([bg,border,label])=>
     `<div class="legend-item"><div class="legend-swatch" style="background:${bg};border:1px solid ${border};"></div><span>${label}</span></div>`
@@ -431,7 +387,7 @@ function switchCal(mode, btn) {
 // ── Tables ───────────────────────────────────────────────────────
 function renderTables(sections) {
   function makeTable({ headers, data, total }) {
-    if (!data.length) return '<p style="color:var(--text-faint);font-size:12px;padding:8px 0">No data</p>';
+    if (!data.length) return '<p style="color:#555;font-size:12px;padding:8px 0">No data</p>';
 
     // Find which column index should show the total
     function totalColIdx() {
@@ -455,7 +411,7 @@ function renderTables(sections) {
     const tfoot = total ? (() => {
       const ci = totalColIdx();
       const cells = headers.map((_, i) => {
-        if (i === 0 && ci > 0) return `<td style="color:var(--text-faint)">Total</td>`;
+        if (i === 0 && ci > 0) return `<td style="color:#666">Total</td>`;
         if (i === ci) return `<td>${total}</td>`;
         return '<td></td>';
       }).join('');
@@ -482,32 +438,32 @@ function tryCharts() {
 
   Plotly.newPlot('chart-donut', [{
     type: 'pie', labels: CATS, values: totals, hole: 0.65,
-    marker: { colors: COLORS, line: { color: INK, width: 2 } },
+    marker: { colors: COLORS, line: { color: '#090909', width: 2 } },
     textinfo: 'none',
     hovertemplate: '<b>%{label}</b><br>MYR %{value:,.0f}<br>%{percent}<extra></extra>'
   }], {
-    paper_bgcolor: SURFACE, plot_bgcolor: SURFACE, font: PLOT_FONT,
+    paper_bgcolor:'#111111', plot_bgcolor:'#111111',
     margin:{t:30,b:20,l:20,r:20},
-    legend:{font:{color:TXT_DIM,size:12},bgcolor:'rgba(0,0,0,0)'},
+    legend:{font:{color:'#888',size:12},bgcolor:'rgba(0,0,0,0)'},
     height:280,
-    title:{text:'Expense Distribution',font:{color:TXT_DIM,size:12},x:0.02},
-    annotations:[{text:`<b>${fmtMYR(grand)}</b>`,x:0.5,y:0.5,font:{size:16,color:TXT},showarrow:false}]
+    title:{text:'Expense Distribution',font:{color:'#666',size:12},x:0.02},
+    annotations:[{text:`<b>${fmtMYR(grand)}</b>`,x:0.5,y:0.5,font:{size:16,color:'white'},showarrow:false}]
   }, {displayModeBar:false,responsive:true});
 
-  const barColors = [COLORS[0], COLORS[1], COLORS[2], COLORS[4]];
+  const barColors = ['#7c6aff','#ec4899','#22c55e','#f59e0b'];
   Plotly.newPlot('chart-bar',
     Object.entries(budget).map(([name, val], i) => ({
       type:'bar', name, y:['Contribution'], x:[val], orientation:'h',
       marker:{color:barColors[i%barColors.length]}, width:0.3
     })),
     {
-      paper_bgcolor: SURFACE, plot_bgcolor: SURFACE, font: PLOT_FONT,
+      paper_bgcolor:'#111111', plot_bgcolor:'#111111',
       margin:{t:40,b:20,l:60,r:20}, barmode:'stack',
-      xaxis:{showgrid:true,gridcolor:GRID,tickfont:{color:TXT_FAINT,size:11},linecolor:GRID},
-      yaxis:{showgrid:false,tickfont:{color:TXT_DIM,size:12},linecolor:GRID},
+      xaxis:{showgrid:true,gridcolor:'#1a1a1a',tickfont:{color:'#555',size:11},linecolor:'#1a1a1a'},
+      yaxis:{showgrid:false,tickfont:{color:'#888',size:12},linecolor:'#1a1a1a'},
       height:180,
-      title:{text:'Contribution Split',font:{color:TXT_DIM,size:12},x:0.02},
-      legend:{font:{color:TXT_DIM,size:12},bgcolor:'rgba(0,0,0,0)'}
+      title:{text:'Contribution Split',font:{color:'#666',size:12},x:0.02},
+      legend:{font:{color:'#888',size:12},bgcolor:'rgba(0,0,0,0)'}
     }, {displayModeBar:false,responsive:true});
 }
 

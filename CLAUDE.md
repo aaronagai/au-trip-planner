@@ -4,13 +4,9 @@ Single-file static dashboard (`index.html`) for a Sydney & Melbourne trip (Nov 2
 Data is fetched live from a published Google Sheet (CSV export) and rendered client-side.
 Charts use Plotly; everything else is vanilla JS/CSS. Hosted on GitHub Pages.
 
-## Design System
-Always read `DESIGN.md` before making any visual or UI decisions.
-All font choices, colors, spacing, and aesthetic direction are defined there.
-Do not deviate without explicit user approval. Specifically:
-- Fonts: Fraunces (display), Geist (body), Geist Mono (numbers). Never reintroduce Inter.
-- Accent is outback ochre `#E08A4B`. Never use the old purple `#7c6aff`.
-- Use the CSS custom properties in `:root` rather than hardcoding hex values.
+## Design
+Dark dashboard theme: `#090909` background, `#111` surfaces, `#7c6aff` accent, Inter font.
+See `DESIGN.md` for the full palette. Do not change colors/fonts without explicit user approval.
 
 ## Performance
 - Keep the data fetch in `<head>` (`window.__sheetData`) so it runs in parallel with downloads.
